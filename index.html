@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark" data-lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Workshops · Workshops de IA — Leonardo Chalhoub</title>
+<meta name="author" content="Leonardo Chalhoub">
+<meta name="description" content="A 4-Saturday workshop series: from Layer Zero to a shipped app, built with AI. Bilingual PT-BR / EN.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<script>
+  (function(){try{var t=localStorage.getItem('ws-theme'),l=localStorage.getItem('ws-lang');
+    if(t)document.documentElement.setAttribute('data-theme',t);
+    if(l){document.documentElement.setAttribute('data-lang',l);document.documentElement.setAttribute('lang',l==='pt'?'pt-BR':'en');}
+  }catch(e){}})();
+</script>
+<style>
+  :root{--font-body:'Inter',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}
+  :root,[data-theme="dark"]{--bg:#0B1416;--bg2:#11212A;--surface:#15262E;--surface2:#1B3139;--border:rgba(255,255,255,.10);--border-glow:rgba(255,54,33,.45);
+    --text:#F5F7F7;--text-dim:#AFC0C6;--text-muted:#6E828A;--accent:#FF3621;--accent-deep:#C7240E;--accent-soft:#FF5F46;--accent-dim:rgba(255,54,33,.08);--accent-glow:rgba(255,54,33,.16);
+    --green:#00A972;--blue:#4596E6;--amber:#FCB924;--brand-grad:linear-gradient(135deg,#FFFFFF 0%,#FF8A76 55%,var(--accent) 100%)}
+  [data-theme="light"]{--bg:#F7F9F9;--bg2:#ECF1F2;--surface:#FFFFFF;--surface2:#F1F5F6;--border:rgba(27,49,57,.12);--border-glow:rgba(255,54,33,.4);
+    --text:#1B3139;--text-dim:#3F575F;--text-muted:#7A8C92;--accent:#E33015;--accent-deep:#B71F08;--accent-soft:#FF5F46;--accent-dim:rgba(227,48,21,.06);--accent-glow:rgba(227,48,21,.10);
+    --green:#00875A;--blue:#1B5FAD;--amber:#9A6E00;--brand-grad:linear-gradient(135deg,#1B3139 0%,#E33015 100%)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100dvh;transition:background .3s,color .3s;overflow-x:hidden}
+  .lava{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none}
+  .lava i{position:absolute;border-radius:50%;filter:blur(70px);opacity:.18;background:radial-gradient(circle,var(--accent-soft),transparent 70%)}
+  .lava i:nth-child(1){width:46vw;height:46vw;top:-10vw;left:-6vw;animation:drift 28s ease-in-out infinite}
+  .lava i:nth-child(2){width:38vw;height:38vw;bottom:-12vw;right:-8vw;animation:drift 34s ease-in-out infinite reverse;background:radial-gradient(circle,var(--accent),transparent 70%);opacity:.12}
+  @keyframes drift{50%{transform:translate(5vw,4vw) scale(1.12)}}
+  @media (prefers-reduced-motion:reduce){.lava i{animation:none}}
+
+  .topbar{position:fixed;top:0;left:0;right:0;height:58px;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,4vw,40px);background:color-mix(in srgb,var(--bg) 72%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);font-weight:600}
+  .brand__mark{width:18px;height:18px;border-radius:4px;background:linear-gradient(135deg,var(--accent),var(--accent-deep))}
+  .ctrls{display:flex;gap:8px;align-items:center}
+  .seg{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:3px;gap:2px}
+  .seg button{font-family:var(--font-mono);font-size:11px;font-weight:600;border:none;background:none;color:var(--text-muted);padding:5px 11px;border-radius:999px;cursor:pointer;transition:.2s}
+  .seg button.active{background:var(--accent);color:#fff}
+
+  .wrap{max-width:1080px;margin:0 auto;padding:clamp(90px,14vh,140px) clamp(20px,5vw,40px) 60px}
+  .hero{text-align:center;margin-bottom:clamp(30px,6vh,56px)}
+  .tag{font-family:var(--font-mono);font-size:clamp(11px,1.4vw,14px);font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent)}
+  h1{font-size:clamp(38px,8vw,86px);font-weight:800;letter-spacing:-2.5px;line-height:.98;margin-top:14px;background:var(--brand-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .sub{font-size:clamp(15px,2.2vw,21px);color:var(--text-dim);max-width:60ch;margin:18px auto 0;line-height:1.55}
+  .pill-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+  .pill{font-family:var(--font-mono);font-size:clamp(11px,1.3vw,13px);padding:7px 15px;border-radius:999px;background:var(--surface);border:1px solid var(--border);color:var(--text-dim)}
+  .pill strong{color:var(--accent-soft)}
+
+  .wk-label{font-family:var(--font-mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);text-align:center;margin:10px 0 16px}
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .wk{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;position:relative;transition:border-color .3s,transform .3s;text-decoration:none;color:inherit;display:flex;flex-direction:column;min-height:170px}
+  .wk.live{border-color:var(--accent);box-shadow:0 0 30px var(--accent-dim)}
+  .wk.soon{opacity:.62}
+  .wk:hover{transform:translateY(-4px);border-color:var(--border-glow)}
+  .wk__n{font-family:var(--font-mono);font-size:13px;color:var(--accent);font-weight:700}
+  .wk__date{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);margin-top:2px}
+  .wk__t{font-size:18px;font-weight:700;margin-top:12px;letter-spacing:-.3px}
+  .wk__d{font-size:13px;color:var(--text-dim);margin-top:6px;line-height:1.45;flex:1}
+  .wk__badge{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:1px;margin-top:12px;display:inline-block;padding:4px 10px;border-radius:999px;align-self:flex-start}
+  .wk__badge.go{background:var(--accent);color:#fff}
+  .wk__badge.wait{background:var(--surface2);color:var(--text-muted);border:1px solid var(--border)}
+
+  .mat-label{font-family:var(--font-mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);text-align:center;margin:40px 0 16px}
+  .mats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .mat{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:18px;text-decoration:none;color:inherit;transition:border-color .3s,transform .3s}
+  .mat:hover{transform:translateY(-3px);border-color:var(--border-glow)}
+  .mat__ic{font-size:26px}
+  .mat__t{font-size:16px;font-weight:700;margin-top:10px}
+  .mat__d{font-size:13px;color:var(--text-dim);margin-top:5px;line-height:1.45}
+
+  .foot{text-align:center;margin-top:48px;font-family:var(--font-mono);font-size:12px;color:var(--text-muted);line-height:1.7}
+  .foot a{color:var(--accent-soft);text-decoration:none}
+
+  @media(max-width:860px){.cards{grid-template-columns:1fr 1fr}.mats{grid-template-columns:1fr}}
+  @media(max-width:480px){.cards{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="lava" aria-hidden="true"><i></i><i></i></div>
+
+<div class="topbar">
+  <div class="brand"><span class="brand__mark"></span><span data-en="AI Workshops" data-pt="Workshops de IA">Workshops de IA</span></div>
+  <div class="ctrls">
+    <div class="seg" id="langSeg"><button data-set-lang="pt" class="active">PT-BR</button><button data-set-lang="en">EN</button></div>
+    <div class="seg" id="themeSeg"><button data-set-theme="dark" class="active">◐</button><button data-set-theme="light">☀</button></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="hero">
+    <p class="tag" data-en="A 4-Saturday series · Jun 2026" data-pt="Uma série de 4 sábados · Jun 2026">Uma série de 4 sábados · Jun 2026</p>
+    <h1 data-en="Building with AI" data-pt="Construindo com IA">Construindo com IA</h1>
+    <p class="sub" data-en="From Layer Zero to a shipped app. A finance professor, two students, and AI as the stage crew — we go from “I have an idea” to “it's live on the internet,” at near-zero cost." data-pt="Do Layer Zero a um app no ar. Um professor de finanças, dois alunos e a IA como equipe de palco — vamos de “tenho uma ideia” a “está no ar na internet”, a custo quase zero.">Do Layer Zero a um app no ar. Um professor de finanças, dois alunos e a IA como equipe de palco — vamos de “tenho uma ideia” a “está no ar na internet”, a custo quase zero.</p>
+    <div class="pill-row">
+      <span class="pill"><strong>4</strong> <span data-en="Saturdays" data-pt="sábados">sábados</span></span>
+      <span class="pill"><strong>2</strong> <span data-en="builders" data-pt="construtores">construtores</span></span>
+      <span class="pill"><strong>1</strong> <span data-en="app shipped" data-pt="app no ar">app no ar</span></span>
+      <span class="pill" data-en="Bilingual PT / EN" data-pt="Bilíngue PT / EN">Bilíngue PT / EN</span>
+    </div>
+  </div>
+
+  <p class="wk-label" data-en="The four workshops" data-pt="Os quatro workshops">Os quatro workshops</p>
+  <div class="cards">
+    <a class="wk live" href="workshop-01/presentation/index.html">
+      <div class="wk__n">Workshop 01</div><div class="wk__date">Sáb 06/06/2026</div>
+      <div class="wk__t" data-en="Show & decide" data-pt="Mostrar & decidir">Mostrar & decidir</div>
+      <div class="wk__d" data-en="The portfolio, the Council, 20 ideas — choose one + draft the Business Model Canvas." data-pt="O portfólio, o Conselho, 20 ideias — escolha uma + rascunhe o Business Model Canvas.">O portfólio, o Conselho, 20 ideias — escolha uma + rascunhe o Business Model Canvas.</div>
+      <span class="wk__badge go" data-en="Open ▸" data-pt="Abrir ▸">Abrir ▸</span>
+    </a>
+    <div class="wk soon">
+      <div class="wk__n">Workshop 02</div><div class="wk__date">Sáb 13/06/2026</div>
+      <div class="wk__t" data-en="Define & design" data-pt="Definir & desenhar">Definir & desenhar</div>
+      <div class="wk__d" data-en="From idea to spec: requirements, screens, repo + Supabase + Vercel skeleton live." data-pt="Da ideia ao spec: requisitos, telas, esqueleto repo + Supabase + Vercel no ar.">Da ideia ao spec: requisitos, telas, esqueleto repo + Supabase + Vercel no ar.</div>
+      <span class="wk__badge wait" data-en="Soon" data-pt="Em breve">Em breve</span>
+    </div>
+    <div class="wk soon">
+      <div class="wk__n">Workshop 03</div><div class="wk__date">Sáb 20/06/2026</div>
+      <div class="wk__t" data-en="Build the core" data-pt="Construir o núcleo">Construir o núcleo</div>
+      <div class="wk__d" data-en="The core flow works end to end; data persists; a preview is deployed." data-pt="O fluxo central funciona de ponta a ponta; os dados persistem; um preview no ar.">O fluxo central funciona de ponta a ponta; os dados persistem; um preview no ar.</div>
+      <span class="wk__badge wait" data-en="Soon" data-pt="Em breve">Em breve</span>
+    </div>
+    <div class="wk soon">
+      <div class="wk__n">Workshop 04</div><div class="wk__date">Sáb 27/06/2026</div>
+      <div class="wk__t" data-en="Ship & pitch" data-pt="Lançar & apresentar">Lançar & apresentar</div>
+      <div class="wk__d" data-en="App on a public URL, students pitch it, the Council gives its final verdict." data-pt="App numa URL pública, os alunos apresentam, o Conselho dá o veredito final.">App numa URL pública, os alunos apresentam, o Conselho dá o veredito final.</div>
+      <span class="wk__badge wait" data-en="Soon" data-pt="Em breve">Em breve</span>
+    </div>
+  </div>
+
+  <p class="mat-label" data-en="Workshop 1 materials" data-pt="Materiais do Workshop 1">Materiais do Workshop 1</p>
+  <div class="mats">
+    <a class="mat" href="workshop-01/presentation/index.html">
+      <div class="mat__ic">🎬</div>
+      <div class="mat__t" data-en="The presentation" data-pt="A apresentação">A apresentação</div>
+      <div class="mat__d" data-en="27-slide bilingual deck — carousel, dark/light, the full session." data-pt="Deck bilíngue de 27 slides — carrossel, escuro/claro, a sessão inteira.">Deck bilíngue de 27 slides — carrossel, escuro/claro, a sessão inteira.</div>
+    </a>
+    <a class="mat" href="workshop-01/materials/business-model-canvas.html">
+      <div class="mat__ic">🗺️</div>
+      <div class="mat__t" data-en="Business Model Canvas" data-pt="Business Model Canvas">Business Model Canvas</div>
+      <div class="mat__d" data-en="Worked example (Pequeno Comércio) + a blank to fill live. Printable." data-pt="Exemplo (Pequeno Comércio) + um em branco para preencher ao vivo. Imprimível.">Exemplo (Pequeno Comércio) + um em branco para preencher ao vivo. Imprimível.</div>
+    </a>
+    <a class="mat" href="workshop-01/materials/student-handout.html">
+      <div class="mat__ic">📄</div>
+      <div class="mat__t" data-en="Student handout" data-pt="Material do aluno">Material do aluno</div>
+      <div class="mat__d" data-en="Pre-read + setup checklist + a blank canvas. Send this before W1." data-pt="Pré-leitura + checklist de preparo + um canvas em branco. Envie antes do W1.">Pré-leitura + checklist de preparo + um canvas em branco. Envie antes do W1.</div>
+    </a>
+  </div>
+
+  <div class="foot">
+    <div data-en="Facilitator? Open the" data-pt="Facilitador? Abra o">Facilitador? Abra o</div>
+    <div><a href="workshop-01/materials/facilitator-cheatsheet.html" data-en="▸ Facilitator cheat-sheet (minute-by-minute + live Council prompts)" data-pt="▸ Guia do facilitador (minuto a minuto + prompts do Conselho ao vivo)">▸ Guia do facilitador (minuto a minuto + prompts do Conselho ao vivo)</a></div>
+    <div style="margin-top:14px" data-en="Series by Leonardo Chalhoub · built with Claude · 2026" data-pt="Série por Leonardo Chalhoub · feito com Claude · 2026">Série por Leonardo Chalhoub · feito com Claude · 2026</div>
+  </div>
+</div>
+
+<script>
+  function applyLang(lang){document.querySelectorAll('[data-en]').forEach(function(el){var v=el.getAttribute('data-'+lang);if(v!==null)el.innerHTML=v;});
+    document.documentElement.setAttribute('data-lang',lang);document.documentElement.setAttribute('lang',lang==='pt'?'pt-BR':'en');
+    document.querySelectorAll('#langSeg button').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-set-lang')===lang);});
+    try{localStorage.setItem('ws-lang',lang);}catch(e){}}
+  function applyTheme(theme){document.documentElement.setAttribute('data-theme',theme);
+    document.querySelectorAll('#themeSeg button').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-set-theme')===theme);});
+    try{localStorage.setItem('ws-theme',theme);}catch(e){}}
+  document.addEventListener('DOMContentLoaded',function(){
+    document.querySelectorAll('#langSeg button').forEach(function(b){b.addEventListener('click',function(){applyLang(b.getAttribute('data-set-lang'));});});
+    document.querySelectorAll('#themeSeg button').forEach(function(b){b.addEventListener('click',function(){applyTheme(b.getAttribute('data-set-theme'));});});
+    var sl=null,st=null;try{sl=localStorage.getItem('ws-lang');st=localStorage.getItem('ws-theme');}catch(e){}
+    applyLang(sl||'pt');applyTheme(st||document.documentElement.getAttribute('data-theme')||'dark');
+  });
+</script>
+</body>
+</html>

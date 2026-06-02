@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark" data-lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Facilitator Cheat-Sheet — Workshop 1</title>
+<meta name="author" content="Leonardo Chalhoub">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<script>
+  (function(){try{var t=localStorage.getItem('ws-theme'),l=localStorage.getItem('ws-lang');
+    if(t)document.documentElement.setAttribute('data-theme',t);
+    if(l){document.documentElement.setAttribute('data-lang',l);document.documentElement.setAttribute('lang',l==='pt'?'pt-BR':'en');}
+  }catch(e){}})();
+</script>
+<style>
+  :root{--font-body:'Inter',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}
+  :root,[data-theme="dark"]{--bg:#0B1416;--surface:#15262E;--surface2:#1B3139;--border:rgba(255,255,255,.12);
+    --text:#F5F7F7;--text-dim:#AFC0C6;--text-muted:#6E828A;--accent:#FF3621;--accent-soft:#FF5F46;--accent-dim:rgba(255,54,33,.08);
+    --green:#00A972;--green-dim:rgba(0,169,114,.10);--blue:#4596E6;--amber:#FCB924;--amber-dim:rgba(252,185,36,.10)}
+  [data-theme="light"]{--bg:#F7F9F9;--surface:#FFFFFF;--surface2:#F1F5F6;--border:rgba(27,49,57,.16);
+    --text:#1B3139;--text-dim:#3F575F;--text-muted:#7A8C92;--accent:#E33015;--accent-soft:#C7240E;--accent-dim:rgba(227,48,21,.05);
+    --green:#00875A;--green-dim:rgba(0,135,90,.07);--blue:#1B5FAD;--amber:#9A6E00;--amber-dim:rgba(184,134,11,.07)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--font-body);background:var(--bg);color:var(--text);padding:clamp(16px,3vw,40px);line-height:1.5;transition:background .3s,color .3s}
+  .wrap{max-width:900px;margin:0 auto}
+  .bar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+  .bar h1{font-size:clamp(20px,3vw,30px);font-weight:800;letter-spacing:-.5px}
+  .bar .sub{font-family:var(--font-mono);font-size:12px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase}
+  .ctrls{display:flex;gap:8px;align-items:center}
+  .seg{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:3px;gap:2px}
+  .seg button{font-family:var(--font-mono);font-size:11px;font-weight:600;border:none;background:none;color:var(--text-muted);padding:5px 11px;border-radius:999px;cursor:pointer}
+  .seg button.active{background:var(--accent);color:#fff}
+  .btn{font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--text-muted);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 12px;cursor:pointer;text-decoration:none;display:inline-block}
+  .btn:hover{color:var(--accent);border-color:var(--accent)}
+
+  h2.sec{font-family:var(--font-mono);font-size:13px;text-transform:uppercase;letter-spacing:2px;color:var(--accent);font-weight:700;margin:26px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+  .meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+  .chip{font-family:var(--font-mono);font-size:11px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:5px 12px;color:var(--text-dim)}
+  .chip b{color:var(--accent-soft)}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+  th{font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-weight:700}
+  td.t{font-family:var(--font-mono);color:var(--accent-soft);white-space:nowrap;font-weight:600;font-size:12.5px}
+  td.b{font-weight:600;white-space:nowrap}
+  td.say{color:var(--text-dim)}
+  tr.brk td{background:var(--amber-dim);font-style:italic;color:var(--amber);font-family:var(--font-mono);font-size:12px}
+
+  .say-cue{display:block;color:var(--text-muted);font-style:italic;font-size:12.5px;margin-top:3px}
+  .say-cue::before{content:'💬 ';font-style:normal}
+
+  .promptbox{background:#0A1316;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:14px 16px;font-family:var(--font-mono);font-size:12.5px;line-height:1.6;color:#E6EDEF;white-space:pre-wrap;margin:8px 0;overflow-x:auto}
+  .promptbox .c{color:#5C7A85;font-style:italic}.promptbox .g{color:#7FD88F}
+  [data-theme="light"] .promptbox{background:#0F1B1F}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
+  .box{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--text-dim)}
+  .box.g{border-left-color:var(--green)}.box.b{border-left-color:var(--blue)}.box.a{border-left-color:var(--amber)}
+  .box b{color:var(--text);display:block;margin-bottom:4px;font-size:13.5px}
+  .box ul{margin:4px 0 0 0;padding-left:16px}.box li{margin:3px 0}
+  a{color:var(--accent-soft)}
+  ul.checklist{list-style:none;padding:0;margin:6px 0}
+  ul.checklist li{padding:5px 0 5px 26px;position:relative;font-size:13.5px;color:var(--text-dim)}
+  ul.checklist li::before{content:'☐';position:absolute;left:0;color:var(--accent);font-size:15px}
+
+  @media(max-width:640px){.grid2{grid-template-columns:1fr}td.t{white-space:normal}}
+  @media print{
+    @page{size:A4 portrait;margin:11mm}
+    body{background:#fff;color:#000;padding:0;font-size:11px}
+    .noprint{display:none!important}
+    .wrap{max-width:none}
+    h2.sec{color:#000;border-color:#999;margin:14px 0 8px;page-break-after:avoid}
+    table{font-size:10.5px}th{color:#000}td.t,td.say-cue,.say-cue{color:#333}td.b{color:#000}
+    .promptbox{background:#f4f4f4;color:#111;border-color:#bbb;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .box{background:#fff;border-color:#999;color:#222}.box b{color:#000}
+    .chip{background:#fff;border-color:#999;color:#222}
+    tr.brk td{background:#f0f0f0;color:#555}
+    a{color:#000;text-decoration:underline}
+    .pb{page-break-before:always}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="bar noprint">
+    <div>
+      <h1 data-en="Facilitator Cheat-Sheet" data-pt="Guia do Facilitador">Guia do Facilitador</h1>
+      <div class="sub" data-en="Workshop 1 · Sat 06 Jun 2026 · online · 3.5h core / 5h with breaks" data-pt="Workshop 1 · Sáb 06 Jun 2026 · online · 3,5h núcleo / 5h com pausas">Workshop 1 · Sáb 06 Jun 2026 · online · 3,5h núcleo / 5h com pausas</div>
+    </div>
+    <div class="ctrls">
+      <a class="btn" href="../presentation/index.html" data-en="◂ Deck" data-pt="◂ Apresentação">◂ Apresentação</a>
+      <button class="btn" onclick="window.print()" data-en="🖨 Print" data-pt="🖨 Imprimir">🖨 Imprimir</button>
+      <div class="seg" id="langSeg"><button data-set-lang="pt" class="active">PT-BR</button><button data-set-lang="en">EN</button></div>
+      <div class="seg" id="themeSeg"><button data-set-theme="dark" class="active">◐</button><button data-set-theme="light">☀</button></div>
+    </div>
+  </div>
+
+  <!-- BEFORE YOU START -->
+  <h2 class="sec" data-en="① Before you go live (15 min before)" data-pt="① Antes de começar (15 min antes)">① Antes de começar (15 min antes)</h2>
+  <ul class="checklist">
+    <li data-en="Open the deck full-screen; test PT/EN toggle + dark/light." data-pt="Abra a apresentação em tela cheia; teste o toggle PT/EN + escuro/claro.">Abra a apresentação em tela cheia; teste o toggle PT/EN + escuro/claro.</li>
+    <li data-en="Open tabs: Caixa Forte, Foco Contábil, Amazing School, Mirante (live URLs)." data-pt="Abra abas: Caixa Forte, Foco Contábil, Amazing School, Mirante (URLs ao vivo).">Abra abas: Caixa Forte, Foco Contábil, Amazing School, Mirante (URLs ao vivo).</li>
+    <li data-en="Open a terminal in the repo with Claude Code ready (Council agents copied in)." data-pt="Abra um terminal no repo com o Claude Code pronto (agentes do Conselho copiados).">Abra um terminal no repo com o Claude Code pronto (agentes do Conselho copiados).</li>
+    <li data-en="Open the Business Model Canvas tab (worked + blank)." data-pt="Abra a aba do Business Model Canvas (exemplo + em branco).">Abra a aba do Business Model Canvas (exemplo + em branco).</li>
+    <li data-en="Confirm screen-share + audio. Have water. Breathe." data-pt="Confirme compartilhamento de tela + áudio. Tenha água. Respire.">Confirme compartilhamento de tela + áudio. Tenha água. Respire.</li>
+  </ul>
+
+  <!-- THE RUN OF SHOW -->
+  <h2 class="sec" data-en="② The run of show (minute by minute)" data-pt="② Roteiro (minuto a minuto)">② Roteiro (minuto a minuto)</h2>
+  <table>
+    <thead><tr><th data-en="Time" data-pt="Hora">Hora</th><th data-en="Block" data-pt="Bloco">Bloco</th><th data-en="What happens + what to say" data-pt="O que acontece + o que dizer">O que acontece + o que dizer</th></tr></thead>
+    <tbody>
+      <tr><td class="t">0:00</td><td class="b" data-en="Welcome" data-pt="Boas-vindas">Boas-vindas</td><td class="say"><span data-en="North Star: from finance professor to AI builder. Set the Layer-Zero thesis." data-pt="North Star: de professor de finanças a construtor com IA. Estabeleça a tese do Layer Zero.">North Star: de professor de finanças a construtor com IA. Estabeleça a tese do Layer Zero.</span><span class="say-cue" data-en="“By the end of today, we leave with one idea and a business plan for it.”" data-pt="“No fim de hoje, saímos com uma ideia e um plano de negócio pra ela.”">“No fim de hoje, saímos com uma ideia e um plano de negócio pra ela.”</span></td></tr>
+      <tr><td class="t">0:15</td><td class="b" data-en="Layer Zero" data-pt="Layer Zero">Layer Zero</td><td class="say"><span data-en="Slides 3–5. The mental shift: thinking beats typing. Tell your arc." data-pt="Slides 3–5. A virada mental: pensar vence digitar. Conte sua trajetória.">Slides 3–5. A virada mental: pensar vence digitar. Conte sua trajetória.</span><span class="say-cue" data-en="“I'm a finance guy. If I can ship these, so can you.”" data-pt="“Eu sou de finanças. Se eu lanço isso, você também lança.”">“Eu sou de finanças. Se eu lanço isso, você também lança.”</span></td></tr>
+      <tr><td class="t">0:35</td><td class="b" data-en="Portfolio tour" data-pt="Tour do portfólio">Tour do portfólio</td><td class="say"><span data-en="Slides 6–12. Open each LIVE URL. For each: the pain, the WHY, the stack, the cost." data-pt="Slides 6–12. Abra cada URL AO VIVO. Para cada: a dor, o PORQUÊ, a stack, o custo.">Slides 6–12. Abra cada URL AO VIVO. Para cada: a dor, o PORQUÊ, a stack, o custo.</span><span class="say-cue" data-en="“All of this — one person, free tools, a few weekends each.”" data-pt="“Tudo isso — uma pessoa, ferramentas grátis, alguns fins de semana cada.”">“Tudo isso — uma pessoa, ferramentas grátis, alguns fins de semana cada.”</span></td></tr>
+      <tr class="brk"><td class="t">1:20</td><td colspan="2" data-en="☕ Break — 15 min" data-pt="☕ Pausa — 15 min">☕ Pausa — 15 min</td></tr>
+      <tr><td class="t">1:35</td><td class="b" data-en="Meet the Council" data-pt="Conheça o Conselho">Conheça o Conselho</td><td class="say"><span data-en="Slides 13–14. Introduce the 4 lenses. Set up the live demo." data-pt="Slides 13–14. Apresente as 4 lentes. Prepare a demo ao vivo.">Slides 13–14. Apresente as 4 lentes. Prepare a demo ao vivo.</span></td></tr>
+      <tr><td class="t">1:55</td><td class="b" data-en="Idea storm" data-pt="Chuva de ideias">Chuva de ideias</td><td class="say"><span data-en="Slides 16–20. Walk the 20 as a menu. Let them react. Then: “What annoys YOU every week?”" data-pt="Slides 16–20. Percorra as 20 como cardápio. Deixe reagirem. Então: “O que incomoda VOCÊ toda semana?”">Slides 16–20. Percorra as 20 como cardápio. Deixe reagirem. Então: “O que incomoda VOCÊ toda semana?”</span></td></tr>
+      <tr class="brk"><td class="t">2:40</td><td colspan="2" data-en="☕ Break — 15 min" data-pt="☕ Pausa — 15 min">☕ Pausa — 15 min</td></tr>
+      <tr><td class="t">2:55</td><td class="b" data-en="Council + decide" data-pt="Conselho + decidir">Conselho + decidir</td><td class="say"><span data-en="Slides 21–22. Run the LIVE Council on the top 2–3. Score together. Pick ONE." data-pt="Slides 21–22. Rode o Conselho AO VIVO nas top 2–3. Pontuem juntos. Escolham UMA.">Slides 21–22. Rode o Conselho AO VIVO nas top 2–3. Pontuem juntos. Escolham UMA.</span><span class="say-cue" data-en="“Commit. From now on, THIS is the app.”" data-pt="“Assumam. A partir de agora, ESTE é o app.”">“Assumam. A partir de agora, ESTE é o app.”</span></td></tr>
+      <tr><td class="t">3:25</td><td class="b" data-en="Draft the BMC" data-pt="Rascunhar o BMC">Rascunhar o BMC</td><td class="say"><span data-en="Slide 23 → open the canvas. Fill the 9 blocks live. Start with Value Prop + Segments." data-pt="Slide 23 → abra o canvas. Preencha os 9 blocos ao vivo. Comece por Proposta de Valor + Segmentos.">Slide 23 → abra o canvas. Preencha os 9 blocos ao vivo. Comece por Proposta de Valor + Segmentos.</span></td></tr>
+      <tr><td class="t">4:05</td><td class="b" data-en="Plan + homework" data-pt="Plano + lição">Plano + lição</td><td class="say"><span data-en="Slides 24–27. Show the Gantt. Assign Week-2 setup. Close on “Now it's your turn.”" data-pt="Slides 24–27. Mostre o Gantt. Passe o setup da Semana 2. Encerre com “Agora é a sua vez.”">Slides 24–27. Mostre o Gantt. Passe o setup da Semana 2. Encerre com “Agora é a sua vez.”</span></td></tr>
+      <tr><td class="t">4:30</td><td class="b" data-en="End" data-pt="Fim">Fim</td><td class="say"><span data-en="Send the student handout link. Confirm next Saturday 13 Jun." data-pt="Envie o link do material do aluno. Confirme próximo sábado 13 Jun.">Envie o link do material do aluno. Confirme próximo sábado 13 Jun.</span></td></tr>
+    </tbody>
+  </table>
+
+  <!-- LIVE COUNCIL PROMPTS -->
+  <h2 class="sec pb" data-en="③ Live Council — copy-paste prompts" data-pt="③ Conselho ao vivo — prompts para colar">③ Conselho ao vivo — prompts para colar</h2>
+  <p style="font-size:13px;color:var(--text-dim);margin-bottom:4px" data-en="In the repo terminal (Claude Code). Replace &lt;idea&gt; with the candidate. Run 1–2 lenses live; don't over-run." data-pt="No terminal do repo (Claude Code). Troque &lt;ideia&gt; pela candidata. Rode 1–2 lentes ao vivo; não exagere.">No terminal do repo (Claude Code). Troque &lt;ideia&gt; pela candidata. Rode 1–2 lentes ao vivo; não exagere.</p>
+  <div class="promptbox" data-en="<span class='c'># 🎯 Management — the WHY + money</span>
+Use the <span class='g'>conselheiro-administrador</span> agent: candid opinion on
+&quot;<span class='g'>&lt;idea&gt;</span>&quot; — real WHY? Can it make money? One paragraph, be direct." data-pt="<span class='c'># 🎯 Administração — o PORQUÊ + dinheiro</span>
+Use o agente <span class='g'>conselheiro-administrador</span>: parecer franco sobre
+&quot;<span class='g'>&lt;ideia&gt;</span>&quot; — PORQUÊ real? Dá dinheiro? Um parágrafo, seja direto."></div>
+  <div class="promptbox" data-en="<span class='c'># 🛠️ Software Eng. — buildable by Week 4?</span>
+Use the <span class='g'>conselheiro-eng-software</span> agent: can 2 students with
+basic coding ship &quot;<span class='g'>&lt;idea&gt;</span>&quot; on Next.js+Supabase in 3 weekends?
+What's the ONE core flow?" data-pt="<span class='c'># 🛠️ Eng. de Software — lançável até a Semana 4?</span>
+Use o agente <span class='g'>conselheiro-eng-software</span>: 2 alunos com código
+básico conseguem lançar &quot;<span class='g'>&lt;ideia&gt;</span>&quot; em Next.js+Supabase em 3 fins
+de semana? Qual é o ÚNICO fluxo central?"></div>
+  <div class="promptbox" data-en="<span class='c'># Optional — 💰 Finance / 🎨 Design</span>
+Use the <span class='g'>conselheiro-financas</span> / <span class='g'>conselheira-design</span> agent
+for a quick take on &quot;<span class='g'>&lt;idea&gt;</span>&quot;." data-pt="<span class='c'># Opcional — 💰 Finanças / 🎨 Design</span>
+Use o agente <span class='g'>conselheiro-financas</span> / <span class='g'>conselheira-design</span>
+para um parecer rápido sobre &quot;<span class='g'>&lt;ideia&gt;</span>&quot;."></div>
+
+  <!-- FACILITATION TIPS + RECOVERY -->
+  <h2 class="sec" data-en="④ Tips & recovery" data-pt="④ Dicas & recuperação">④ Dicas & recuperação</h2>
+  <div class="grid2">
+    <div class="box g"><b data-en="If they go quiet on ideas" data-pt="Se travarem nas ideias">Se travarem nas ideias</b><span data-en="Don't fill the silence. Ask: “What did you do this week that was annoying and repetitive?” Pain → idea." data-pt="Não preencha o silêncio. Pergunte: “O que você fez essa semana que foi chato e repetitivo?” Dor → ideia.">Não preencha o silêncio. Pergunte: “O que você fez essa semana que foi chato e repetitivo?” Dor → ideia.</span></div>
+    <div class="box a"><b data-en="If running late" data-pt="Se atrasar">Se atrasar</b><span data-en="Cut portfolio deep-dives to 2 apps (Caixa Forte + Mirante). Protect the decide + BMC blocks." data-pt="Corte os aprofundamentos para 2 apps (Caixa Forte + Mirante). Proteja os blocos de decidir + BMC.">Corte os aprofundamentos para 2 apps (Caixa Forte + Mirante). Proteja os blocos de decidir + BMC.</span></div>
+    <div class="box b"><b data-en="If the live agent stalls" data-pt="Se o agente travar">Se o agente travar</b><span data-en="Read the deck's presented opinions instead (slide 14). Move on; tech hiccups are fine." data-pt="Leia os pareceres já no deck (slide 14). Siga em frente; falha técnica acontece.">Leia os pareceres já no deck (slide 14). Siga em frente; falha técnica acontece.</span></div>
+    <div class="box"><b data-en="Keep deciding, not debating" data-pt="Decidir, não debater">Decidir, não debater</b><span data-en="When 2 ideas tie, pick the stronger WHY. Done beats perfect. Commit and build." data-pt="Quando 2 empatam, fique com o PORQUÊ mais forte. Feito vence perfeito. Assuma e construa.">Quando 2 empatam, fique com o PORQUÊ mais forte. Feito vence perfeito. Assuma e construa.</span></div>
+  </div>
+
+  <!-- LINKS -->
+  <h2 class="sec" data-en="⑤ Links at hand" data-pt="⑤ Links à mão">⑤ Links à mão</h2>
+  <div class="meta">
+    <span class="chip"><b>Deck:</b> <a href="../presentation/index.html">presentation/index.html</a></span>
+    <span class="chip"><b>BMC:</b> <a href="business-model-canvas.html">business-model-canvas.html</a></span>
+    <span class="chip"><b>Handout:</b> <a href="student-handout.html">student-handout.html</a></span>
+    <span class="chip"><b>Caixa Forte:</b> caixa-forte-app.vercel.app</span>
+    <span class="chip"><b>Foco:</b> foco-contabil.vercel.app</span>
+    <span class="chip"><b>Amazing School:</b> amazing-school-app.vercel.app</span>
+    <span class="chip"><b>Mirante:</b> leonardochalhoub.github.io/mirante-dos-dados-br</span>
+  </div>
+
+</div>
+
+<script>
+  function applyLang(lang){document.querySelectorAll('[data-en]').forEach(function(el){var v=el.getAttribute('data-'+lang);if(v!==null)el.innerHTML=v;});
+    document.documentElement.setAttribute('data-lang',lang);document.documentElement.setAttribute('lang',lang==='pt'?'pt-BR':'en');
+    document.querySelectorAll('#langSeg button').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-set-lang')===lang);});
+    try{localStorage.setItem('ws-lang',lang);}catch(e){}}
+  function applyTheme(theme){document.documentElement.setAttribute('data-theme',theme);
+    document.querySelectorAll('#themeSeg button').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-set-theme')===theme);});
+    try{localStorage.setItem('ws-theme',theme);}catch(e){}}
+  document.addEventListener('DOMContentLoaded',function(){
+    document.querySelectorAll('#langSeg button').forEach(function(b){b.addEventListener('click',function(){applyLang(b.getAttribute('data-set-lang'));});});
+    document.querySelectorAll('#themeSeg button').forEach(function(b){b.addEventListener('click',function(){applyTheme(b.getAttribute('data-set-theme'));});});
+    var sl=null,st=null;try{sl=localStorage.getItem('ws-lang');st=localStorage.getItem('ws-theme');}catch(e){}
+    applyLang(sl||'pt');applyTheme(st||document.documentElement.getAttribute('data-theme')||'dark');
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark" data-lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workshop 1 — Construindo com IA · Building with AI</title>
+<meta name="author" content="Leonardo Chalhoub">
+<meta name="description" content="Workshop 1 of the AI Engineering series — Layer Zero made real. Show the shipped portfolio, meet the Mirante Council, explore 20 app ideas, decide one, draft the Business Model Canvas. Bilingual PT-BR / EN, dark/light.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+  /* no-flash: restore saved theme/lang before paint */
+  (function(){try{var t=localStorage.getItem('ws-theme'),l=localStorage.getItem('ws-lang');
+    if(t)document.documentElement.setAttribute('data-theme',t);
+    if(l){document.documentElement.setAttribute('data-lang',l);document.documentElement.setAttribute('lang',l==='pt'?'pt-BR':'en');}
+  }catch(e){}})();
+</script>
+<style>
+  :root{--font-body:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;--font-mono:'JetBrains Mono','SF Mono',Consolas,monospace;}
+  /* ===== DARK (Databricks Lava on dark) ===== */
+  :root,[data-theme="dark"]{
+    --bg:#0B1416;--bg2:#11212A;--surface:#15262E;--surface2:#1B3139;--surface-elevated:#234049;
+    --border:rgba(255,255,255,0.10);--border-glow:rgba(255,54,33,0.45);
+    --text:#F5F7F7;--text-dim:#AFC0C6;--text-muted:#6E828A;
+    --accent:#FF3621;--accent-deep:#C7240E;--accent-soft:#FF5F46;
+    --accent-dim:rgba(255,54,33,0.08);--accent-glow:rgba(255,54,33,0.16);
+    --green:#00A972;--green-dim:rgba(0,169,114,0.10);--green-border:rgba(0,169,114,0.34);
+    --blue:#4596E6;--blue-dim:rgba(69,150,230,0.10);--blue-border:rgba(69,150,230,0.34);
+    --amber:#FCB924;--amber-dim:rgba(252,185,36,0.10);--amber-border:rgba(252,185,36,0.34);
+    --red:#FF3621;--red-dim:rgba(255,54,33,0.10);
+    --grid:rgba(255,255,255,0.035);--brand-grad:linear-gradient(135deg,#FFFFFF 0%,#FF8A76 55%,var(--accent) 100%);
+  }
+  /* ===== LIGHT (Lava on light) ===== */
+  [data-theme="light"]{
+    --bg:#F7F9F9;--bg2:#ECF1F2;--surface:#FFFFFF;--surface2:#F1F5F6;--surface-elevated:#FFFFFF;
+    --border:rgba(27,49,57,0.12);--border-glow:rgba(255,54,33,0.4);
+    --text:#1B3139;--text-dim:#3F575F;--text-muted:#7A8C92;
+    --accent:#E33015;--accent-deep:#B71F08;--accent-soft:#FF5F46;
+    --accent-dim:rgba(227,48,21,0.06);--accent-glow:rgba(227,48,21,0.10);
+    --green:#00875A;--green-dim:rgba(0,135,90,0.07);--green-border:rgba(0,135,90,0.28);
+    --blue:#1B5FAD;--blue-dim:rgba(27,95,173,0.07);--blue-border:rgba(27,95,173,0.28);
+    --amber:#9A6E00;--amber-dim:rgba(184,134,11,0.07);--amber-border:rgba(184,134,11,0.28);
+    --red:#C7240E;--red-dim:rgba(199,36,14,0.06);
+    --grid:rgba(27,49,57,0.05);--brand-grad:linear-gradient(135deg,#1B3139 0%,#E33015 100%);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:var(--font-body);color:var(--text);background:var(--bg);overflow:hidden;transition:background .4s,color .4s}
+
+  /* ===== LAVA BACKGROUND ===== */
+  .lava{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none}
+  .lava i{position:absolute;border-radius:50%;filter:blur(70px);opacity:.20;background:radial-gradient(circle,var(--accent-soft),transparent 70%)}
+  .lava i:nth-child(1){width:46vw;height:46vw;top:-8vw;left:-6vw;animation:drift 26s ease-in-out infinite}
+  .lava i:nth-child(2){width:40vw;height:40vw;bottom:-12vw;right:-8vw;animation:drift 34s ease-in-out infinite reverse;background:radial-gradient(circle,var(--accent),transparent 70%);opacity:.14}
+  .lava i:nth-child(3){width:26vw;height:26vw;top:40%;left:55%;animation:drift 30s ease-in-out infinite;background:radial-gradient(circle,var(--amber),transparent 70%);opacity:.07}
+  @keyframes drift{50%{transform:translate(6vw,4vw) scale(1.12)}}
+
+  /* ===== DECK ENGINE ===== */
+  .deck{height:100dvh;overflow-y:auto;scroll-snap-type:y mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
+  .slide{height:100dvh;scroll-snap-align:start;overflow-y:auto;overflow-x:hidden;position:relative;display:flex;flex-direction:column;justify-content:safe center;
+    padding:clamp(78px,9vh,100px) clamp(36px,8vw,120px) clamp(34px,5vh,56px);isolation:isolate;
+    opacity:0;transform:translateY(40px) scale(.985);transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
+  .slide.visible{opacity:1;transform:none}
+  .slide.scrollable{justify-content:safe center;overflow-y:auto}
+  .slide .reveal{opacity:0;transform:translateY(20px);transition:opacity .5s cubic-bezier(.16,1,.3,1),transform .5s cubic-bezier(.16,1,.3,1)}
+  .slide.visible .reveal{opacity:1;transform:none}
+  .slide.visible .reveal:nth-child(1){transition-delay:.08s}.slide.visible .reveal:nth-child(2){transition-delay:.16s}
+  .slide.visible .reveal:nth-child(3){transition-delay:.24s}.slide.visible .reveal:nth-child(4){transition-delay:.32s}
+  .slide.visible .reveal:nth-child(5){transition-delay:.40s}.slide.visible .reveal:nth-child(6){transition-delay:.48s}
+  .slide.visible .reveal:nth-child(7){transition-delay:.56s}.slide.visible .reveal:nth-child(8){transition-delay:.64s}
+  @media (prefers-reduced-motion:reduce){.slide,.slide .reveal{opacity:1!important;transform:none!important;transition:none!important}.lava i{animation:none!important}}
+  .slide::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:-1;opacity:.5;
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:32px 32px}
+
+  /* ===== TOP BAR ===== */
+  .topbar{position:fixed;top:0;left:0;right:0;height:clamp(48px,7vh,64px);z-index:120;display:flex;align-items:center;justify-content:space-between;
+    padding:0 clamp(14px,3vw,28px);background:color-mix(in srgb,var(--bg) 72%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);font-weight:600}
+  .brand__mark{width:18px;height:18px;border-radius:4px;background:linear-gradient(135deg,var(--accent),var(--accent-deep))}
+  .controls{display:flex;align-items:center;gap:clamp(8px,1.5vw,16px)}
+  .seg{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:3px;gap:2px}
+  .seg button{font-family:var(--font-mono);font-size:clamp(10px,1.2vw,12px);font-weight:600;letter-spacing:.5px;border:none;background:none;color:var(--text-muted);
+    padding:5px clamp(8px,1.2vw,13px);border-radius:999px;cursor:pointer;transition:.2s;white-space:nowrap;display:flex;align-items:center;gap:5px}
+  .seg button:hover{color:var(--text)}
+  .seg button.active{background:var(--accent);color:#fff}
+  .seg__label{font-size:9px;color:var(--text-muted);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:1px;align-self:center;margin-right:2px;display:none}
+  @media(min-width:880px){.seg__label{display:inline}}
+  .home-link{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);text-decoration:none;letter-spacing:1px;padding:4px 8px;border-radius:6px;border:1px solid var(--border)}
+  .home-link:hover{color:var(--accent);border-color:var(--border-glow)}
+
+  /* ===== NAV CHROME ===== */
+  .deck-progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-soft));z-index:130;transition:width .3s ease;pointer-events:none}
+  .deck-dots{position:fixed;right:clamp(8px,1.4vw,16px);top:50%;transform:translateY(-50%);display:flex;flex-flow:column wrap;gap:4px 7px;z-index:120;padding:7px 8px;background:color-mix(in srgb,var(--bg) 62%,transparent);border-radius:14px;backdrop-filter:blur(6px);max-height:90vh;align-content:flex-end}
+  .deck-dot{width:7px;height:7px;border-radius:50%;background:var(--text-muted);opacity:.35;border:none;padding:0;cursor:pointer;transition:opacity .2s,transform .2s;flex-shrink:0}
+  .deck-dot:hover{opacity:.7}
+  .deck-dot.active{opacity:1;transform:scale(1.6);background:var(--accent)}
+  .deck-counter{position:fixed;bottom:clamp(10px,2vh,20px);right:clamp(12px,2vw,22px);font-family:var(--font-mono);font-size:12px;color:var(--text-muted);z-index:120;font-variant-numeric:tabular-nums;text-shadow:0 1px 3px rgba(0,0,0,.4)}
+  .deck-foot{position:fixed;bottom:clamp(10px,2vh,20px);left:clamp(12px,2vw,22px);font-family:var(--font-mono);font-size:11px;color:var(--text-muted);z-index:120;line-height:1.5;text-shadow:0 1px 3px rgba(0,0,0,.4)}
+  .deck-foot b{color:var(--accent);font-weight:600}
+  .deck-hints{position:fixed;bottom:clamp(46px,7vh,66px);left:50%;transform:translateX(-50%);font-family:var(--font-mono);font-size:11px;color:var(--text-muted);opacity:.6;z-index:120;transition:opacity .5s;white-space:nowrap;text-shadow:0 1px 3px rgba(0,0,0,.4)}
+  .deck-hints.faded{opacity:0;pointer-events:none}
+
+  /* ===== TYPE ===== */
+  .slide__display{font-size:clamp(40px,8.5vw,104px);font-weight:800;letter-spacing:-3px;line-height:.95;text-wrap:balance}
+  .slide__heading{font-size:clamp(25px,4.4vw,46px);font-weight:800;letter-spacing:-1px;line-height:1.12;text-wrap:balance}
+  .slide__subheading{font-size:clamp(18px,2.5vw,26px);font-weight:700;letter-spacing:-.4px;line-height:1.2}
+  .slide__body{font-size:clamp(15px,2vw,21px);line-height:1.6;color:var(--text-dim);text-wrap:pretty}
+  .slide__body strong{color:var(--text);font-weight:600}
+  .slide__subtitle{font-family:var(--font-mono);font-size:clamp(12px,1.4vw,17px);color:var(--text-dim);letter-spacing:1px}
+  .slide__label{font-family:var(--font-mono);font-size:clamp(10px,1.15vw,13px);font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+  .slide__label::before{content:'';width:22px;height:2px;background:var(--accent);display:inline-block}
+  .kw{color:var(--accent-soft);font-weight:600}
+  code.inline{font-family:var(--font-mono);font-size:.86em;background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:1px 7px;color:var(--accent-soft)}
+
+  /* ===== TITLE ===== */
+  .slide--title{justify-content:center;align-items:center;text-align:center;background-image:radial-gradient(ellipse at 50% 32%,var(--accent-glow) 0%,transparent 55%)}
+  .slide--title .slide__display{background:var(--brand-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .pill-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:clamp(20px,3.5vh,40px)}
+  .pill{font-family:var(--font-mono);font-size:clamp(11px,1.25vw,14px);padding:7px 16px;border-radius:999px;background:var(--surface);border:1px solid var(--border);color:var(--text-dim)}
+  .pill strong{color:var(--accent-soft);font-weight:700}
+  .classtag{font-family:var(--font-mono);font-size:clamp(12px,1.5vw,16px);font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent)}
+  .byline{margin-top:clamp(20px,3.5vh,40px);display:flex;flex-direction:column;gap:4px;align-items:center}
+  .byline__name{font-size:clamp(17px,2.2vw,24px);font-weight:700}
+  .byline__role{font-family:var(--font-mono);font-size:clamp(11px,1.3vw,14px);color:var(--accent-soft);letter-spacing:1px}
+  .byline__gen{font-family:var(--font-mono);font-size:clamp(10px,1.1vw,12px);color:var(--text-muted);margin-top:6px}
+
+  /* ===== AGENDA ===== */
+  .agenda{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:clamp(8px,1.4vw,14px);margin-top:clamp(14px,2.5vh,28px);counter-reset:ag}
+  .agenda li{display:flex;align-items:baseline;gap:14px;padding:clamp(9px,1.4vh,14px) clamp(12px,1.6vw,18px);background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;font-size:clamp(14px,1.6vw,19px)}
+  .agenda li::before{counter-increment:ag;content:counter(ag,decimal-leading-zero);font-family:var(--font-mono);font-weight:700;color:var(--accent);font-size:.85em}
+
+  /* ===== SPLIT ===== */
+  .slide--split{padding:0}
+  .slide--split .slide__panels{display:grid;grid-template-columns:1fr 1fr;height:100%}
+  .slide--split .slide__panel{padding:clamp(40px,6vh,80px) clamp(30px,4vw,60px);display:flex;flex-direction:column;justify-content:center}
+  .slide--split .slide__panel--left{background:var(--surface)}
+  .slide--split .slide__panel--right{background:var(--bg2)}
+  .slide__bullets{list-style:none;padding:0}
+  .slide__bullets li{padding:9px 0 9px 26px;position:relative;font-size:clamp(15px,1.9vw,21px);line-height:1.45;color:var(--text-dim)}
+  .slide__bullets li::before{content:'';position:absolute;left:0;top:15px;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+  .slide__bullets.check li::before{content:'✓';background:none;color:var(--green);top:8px;font-weight:700;width:auto;height:auto}
+  .slide__bullets.cross li::before{content:'✕';background:none;color:var(--red);top:8px;font-weight:700;width:auto;height:auto}
+
+  /* ===== STEPS ===== */
+  .steps{display:flex;flex-direction:column;gap:clamp(8px,1.4vh,16px);margin-top:clamp(14px,2.4vh,28px)}
+  .step{display:flex;gap:clamp(14px,1.6vw,22px);align-items:flex-start;padding:clamp(10px,1.6vh,18px) clamp(14px,1.8vw,22px);background:var(--surface);border:1px solid var(--border);border-radius:12px}
+  .step__n{flex-shrink:0;width:clamp(34px,3.4vw,46px);height:clamp(34px,3.4vw,46px);border-radius:50%;display:grid;place-items:center;font-family:var(--font-mono);font-weight:700;font-size:clamp(13px,1.6vw,19px);color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent-deep))}
+  .step__t{font-size:clamp(15px,1.9vw,22px);font-weight:600}
+  .step__d{font-size:clamp(13px,1.5vw,17px);color:var(--text-dim);line-height:1.45;margin-top:2px}
+
+  /* ===== CARDS ===== */
+  .cardgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(200px,24vw,300px),1fr));gap:clamp(12px,1.8vw,22px);margin-top:clamp(14px,2.4vh,28px)}
+  .cardgrid--quad{grid-template-columns:repeat(4,1fr)}
+  @media(max-width:900px){.cardgrid--quad{grid-template-columns:repeat(2,1fr)}}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:clamp(16px,2.2vh,26px);transition:border-color .3s,transform .3s}
+  .card:hover{border-color:var(--border-glow);transform:translateY(-3px)}
+  .card__icon{font-size:clamp(22px,2.6vw,32px);margin-bottom:10px}
+  .card__t{font-size:clamp(16px,1.9vw,22px);font-weight:600;margin-bottom:6px}
+  .card__d{font-size:clamp(13px,1.5vw,16px);color:var(--text-dim);line-height:1.5}
+  .card__d a{color:var(--accent-soft);text-decoration:none;border-bottom:1px solid var(--border-glow)}
+  .card--accent{border-top:3px solid var(--accent)}.card--green{border-top:3px solid var(--green)}.card--blue{border-top:3px solid var(--blue)}.card--amber{border-top:3px solid var(--amber)}
+
+  /* ===== TABLE ===== */
+  .dtable{width:100%;border-collapse:collapse;margin-top:clamp(14px,2.4vh,26px);font-size:clamp(12px,1.5vw,17px)}
+  .dtable th,.dtable td{text-align:left;padding:clamp(8px,1.4vh,14px) clamp(10px,1.4vw,18px);border-bottom:1px solid var(--border)}
+  .dtable th{font-family:var(--font-mono);font-size:.8em;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-weight:700}
+  .dtable tr:hover td{background:var(--surface)}
+  .dtable td.idea{font-weight:600;color:var(--text)}
+  .dtable .sc{font-family:var(--font-mono);letter-spacing:-1px;white-space:nowrap}
+  .dtable .free{color:var(--green);font-weight:700}
+
+  /* ===== KPI ===== */
+  .slide__kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(140px,20vw,230px),1fr));gap:clamp(12px,2vw,24px);margin-top:clamp(16px,3vh,32px)}
+  .slide__kpi{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:clamp(16px,3vh,32px) clamp(16px,2vw,24px);min-width:0;overflow:hidden}
+  .slide__kpi-val{font-size:clamp(30px,5vw,56px);font-weight:800;letter-spacing:-1.5px;line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .slide__kpi-label{font-family:var(--font-mono);font-size:clamp(9px,1.2vw,13px);font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-dim);margin-top:8px}
+
+  /* ===== CALLOUT ===== */
+  .callout{display:flex;gap:clamp(14px,1.8vw,22px);align-items:flex-start;padding:clamp(16px,2.4vh,28px) clamp(18px,2.2vw,30px);border-radius:14px;margin-top:clamp(14px,2.4vh,26px);background:var(--accent-dim);border:1px solid var(--accent);border-left:4px solid var(--accent)}
+  .callout--green{background:var(--green-dim);border-color:var(--green-border);border-left-color:var(--green)}
+  .callout--amber{background:var(--amber-dim);border-color:var(--amber-border);border-left-color:var(--amber)}
+  .callout--blue{background:var(--blue-dim);border-color:var(--blue-border);border-left-color:var(--blue)}
+  .callout__icon{font-size:clamp(22px,2.6vw,30px);flex-shrink:0}
+  .callout__t{font-weight:700;font-size:clamp(15px,1.8vw,21px);margin-bottom:4px}
+  .callout__d{color:var(--text-dim);font-size:clamp(13px,1.5vw,18px);line-height:1.5}
+
+  /* ===== LAB / DEMO ===== */
+  .slide--lab{background-image:radial-gradient(ellipse at 80% 20%,var(--green-dim) 0%,transparent 45%)}
+  .lab-badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:clamp(11px,1.3vw,14px);font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);padding:6px 14px;border:1px solid var(--green-border);border-radius:999px;background:var(--green-dim);margin-bottom:14px;align-self:flex-start}
+  .promptwin{background:#0A1316;border:1px solid rgba(255,255,255,.10);border-radius:12px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.35);margin-top:clamp(12px,2vh,20px)}
+  .promptwin__bar{display:flex;align-items:center;gap:7px;padding:10px 14px;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.08)}
+  .promptwin__dot{width:11px;height:11px;border-radius:50%}
+  .promptwin__dot--r{background:#FF5F56}.promptwin__dot--y{background:#FFBD2E}.promptwin__dot--g{background:#27C93F}
+  .promptwin__name{font-family:var(--font-mono);font-size:12px;color:#8b9ba3;margin-left:8px}
+  .promptwin__body{font-family:var(--font-mono);font-size:clamp(11px,1.3vw,15px);line-height:1.6;color:#E6EDEF;padding:clamp(14px,2vh,22px) clamp(14px,2vw,24px);white-space:pre-wrap;overflow-x:auto}
+  .promptwin__body .pp{color:#7FD88F}.promptwin__body .pc{color:#5C7A85;font-style:italic}
+
+  /* ===== MODULE DIVIDER ===== */
+  .slide--module{justify-content:center;background-image:radial-gradient(ellipse at 25% 40%,var(--accent-glow) 0%,transparent 50%)}
+  .slide--module .mod-num{font-family:var(--font-mono);font-size:clamp(60px,16vw,200px);font-weight:800;line-height:.85;letter-spacing:-6px;color:var(--accent);opacity:.16;position:absolute;top:50%;left:clamp(20px,6vw,90px);transform:translateY(-50%);z-index:-1}
+  .slide--module .mod-k{font-family:var(--font-mono);font-size:clamp(12px,1.4vw,15px);font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent)}
+  .slide--module .mod-t{font-size:clamp(30px,5.5vw,68px);font-weight:800;letter-spacing:-2px;line-height:1.05;margin-top:10px;max-width:18ch}
+  .slide--module .mod-d{font-size:clamp(15px,2vw,22px);color:var(--text-dim);margin-top:16px;max-width:52ch}
+
+  /* ===== BLEED ===== */
+  .slide--bleed{padding:0;justify-content:center;text-align:center}
+  .slide--bleed .slide__content{position:relative;z-index:2;padding:clamp(40px,6vh,80px) clamp(40px,8vw,120px);max-width:1000px;margin:0 auto;background-image:radial-gradient(ellipse at 50% 50%,var(--accent-glow) 0%,transparent 60%)}
+  .cta-url{display:inline-block;margin-top:24px;font-family:var(--font-mono);font-size:clamp(13px,1.6vw,18px);color:var(--accent-soft);border:1px solid var(--border-glow);border-radius:999px;padding:10px 22px;text-decoration:none}
+  .cta-url:hover{background:var(--accent-dim)}
+
+  /* ===== GANTT ===== */
+  .gantt{margin-top:clamp(16px,3vh,30px);font-size:clamp(12px,1.4vw,16px)}
+  .gantt__head{display:grid;grid-template-columns:clamp(120px,16vw,200px) repeat(4,1fr);gap:6px;margin-bottom:8px}
+  .gantt__head span{font-family:var(--font-mono);font-size:clamp(10px,1.1vw,13px);color:var(--text-muted);text-align:center}
+  .gantt__head span:first-child{text-align:left}
+  .gantt__row{display:grid;grid-template-columns:clamp(120px,16vw,200px) repeat(4,1fr);gap:6px;margin-bottom:6px;align-items:center}
+  .gantt__task{color:var(--text-dim);font-size:clamp(12px,1.4vw,16px)}
+  .gantt__track{grid-column:2 / span 4;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .gantt__cell{height:24px;border-radius:6px;background:var(--surface);border:1px solid var(--border)}
+  .gantt__cell.fill{background:linear-gradient(90deg,var(--accent),var(--accent-soft));border-color:transparent}
+  .gantt__cell.fill.g{background:linear-gradient(90deg,var(--green),#3fd9a8)}
+  .gantt__cell.fill.b{background:linear-gradient(90deg,var(--blue),#7db8f0)}
+  .gantt__cell.fill.a{background:linear-gradient(90deg,var(--amber),#ffd76a)}
+  .gantt__milestones{display:grid;grid-template-columns:clamp(120px,16vw,200px) repeat(4,1fr);gap:6px;margin-top:10px}
+  .gantt__ms{grid-column:2 / span 4;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .gantt__ms span{font-family:var(--font-mono);font-size:clamp(9px,1vw,12px);color:var(--accent);text-align:center}
+
+  /* ===== BMC MINI ===== */
+  .bmcmini{display:grid;gap:6px;margin-top:clamp(14px,2.5vh,26px);
+    grid-template-columns:repeat(5,1fr);
+    grid-template-areas:"kp ka vp cr cs" "kp kr vp ch cs" "co co co rs rs"}
+  .bmcmini>div{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:clamp(8px,1.2vh,13px)}
+  .bmcmini b{font-family:var(--font-mono);font-size:clamp(8px,.95vw,11px);text-transform:uppercase;letter-spacing:1px;color:var(--accent);display:block;margin-bottom:3px}
+  .bmcmini span{font-size:clamp(10px,1.15vw,13px);color:var(--text-dim);line-height:1.35}
+  .bmcmini .kp{grid-area:kp}.bmcmini .ka{grid-area:ka}.bmcmini .vp{grid-area:vp;border-color:var(--accent);border-left:3px solid var(--accent)}.bmcmini .cr{grid-area:cr}.bmcmini .cs{grid-area:cs}.bmcmini .kr{grid-area:kr}.bmcmini .ch{grid-area:ch}.bmcmini .co{grid-area:co}.bmcmini .rs{grid-area:rs}
+  @media(max-width:760px){.bmcmini{grid-template-columns:1fr 1fr;grid-template-areas:"kp ka" "vp vp" "cr cs" "kr ch" "co rs"}}
+
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+  :where(button,a,[tabindex]):focus:not(:focus-visible){outline:none}
+
+  /* ===== RESPONSIVE ===== */
+  @media(max-height:920px){.slide{padding-top:clamp(72px,8.6vh,84px);padding-bottom:clamp(22px,3.2vh,38px)}
+    .slide__heading{font-size:clamp(22px,3.6vw,36px)}.slide__display{font-size:clamp(34px,6.5vw,76px)}
+    .slide__body{font-size:clamp(14px,1.7vw,18px)}.slide__kpi-val{font-size:clamp(26px,4.6vw,46px)}
+    .cardgrid{gap:clamp(10px,1.4vw,16px)}.card{padding:clamp(12px,1.6vh,18px)}}
+  @media(max-height:780px){.slide__display{font-size:clamp(30px,5.5vw,60px)}.slide__body{font-size:clamp(13px,1.5vw,16px)}.card__d{font-size:clamp(12px,1.4vw,14px)}}
+  @media(max-width:768px){.slide--split .slide__panels{grid-template-columns:1fr}.slide__kpis{grid-template-columns:repeat(2,1fr)}.brand__txt{display:none}
+    .gantt__head,.gantt__row,.gantt__milestones{grid-template-columns:90px repeat(4,1fr)}}
+  @media(max-height:540px){.deck-dots{display:none}}
+</style>
+</head>
+<body>
+
+<div class="lava" aria-hidden="true"><i></i><i></i><i></i></div>
+
+<!-- ═══════════ TOP BAR ═══════════ -->
+<div class="topbar">
+  <div class="brand"><span class="brand__mark"></span><span class="brand__txt" data-en="AI Workshops · 01" data-pt="Workshops de IA · 01">Workshops de IA · 01</span></div>
+  <div class="controls">
+    <a class="home-link" href="../../index.html" data-en="◂ Series" data-pt="◂ Série">◂ Série</a>
+    <div class="seg" id="langSeg" role="group" aria-label="Language">
+      <span class="seg__label">Lang</span>
+      <button data-set-lang="pt" class="active">PT-BR</button>
+      <button data-set-lang="en">EN</button>
+    </div>
+    <div class="seg" id="themeSeg" role="group" aria-label="Theme">
+      <span class="seg__label" data-en="Theme" data-pt="Tema">Tema</span>
+      <button data-set-theme="dark" class="active" title="Dark">◐ <span data-en="Dark" data-pt="Escuro">Escuro</span></button>
+      <button data-set-theme="light" title="Light">☀ <span data-en="Light" data-pt="Claro">Claro</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="deck">
+
+  <!-- 1 ═══ TITLE ═══ -->
+  <section class="slide slide--title">
+    <p class="classtag reveal" data-en="Workshop 01 · Sat 06 Jun 2026" data-pt="Workshop 01 · Sáb 06 Jun 2026">Workshop 01 · Sáb 06 Jun 2026</p>
+    <h1 class="slide__display reveal" style="margin-top:12px" data-en="Building with AI" data-pt="Construindo com IA">Construindo com IA</h1>
+    <div class="reveal"><p class="slide__subtitle" style="margin-top:18px;opacity:.85" data-en="Layer Zero, made real — from a finance professor's shipped apps to your own. Show what's done, decide what to build." data-pt="Layer Zero, na prática — dos apps já no ar de um professor de finanças aos seus. Mostrar o que está pronto, decidir o que construir.">Layer Zero, na prática — dos apps já no ar de um professor de finanças aos seus. Mostrar o que está pronto, decidir o que construir.</p></div>
+    <div class="reveal pill-row">
+      <span class="pill"><strong>4</strong> <span data-en="Saturdays" data-pt="sábados">sábados</span></span>
+      <span class="pill"><strong>2</strong> <span data-en="builders" data-pt="construtores">construtores</span></span>
+      <span class="pill"><strong>6</strong> <span data-en="shipped apps" data-pt="apps no ar">apps no ar</span></span>
+      <span class="pill"><strong>20</strong> <span data-en="ideas" data-pt="ideias">ideias</span></span>
+      <span class="pill"><span data-en="Cost" data-pt="Custo">Custo</span> <strong>R$ 0</strong></span>
+    </div>
+    <div class="byline reveal">
+      <div class="byline__name">Leonardo Chalhoub</div>
+      <div class="byline__role" data-en="AI Data Engineering Tech Lead · ex-finance professor" data-pt="Tech Lead de Eng. de Dados com IA · ex-professor de finanças">Tech Lead de Eng. de Dados com IA · ex-professor de finanças</div>
+      <div class="byline__gen" data-en="Bilingual EN / PT-BR · dark · light — toggle in the top bar" data-pt="Bilíngue PT-BR / EN · escuro · claro — alterne na barra acima">Bilíngue PT-BR / EN · escuro · claro — alterne na barra acima</div>
+    </div>
+  </section>
+
+  <!-- 2 ═══ HOW TO USE ═══ -->
+  <section class="slide">
+    <p class="slide__label reveal" data-en="Before we start" data-pt="Antes de começar">Antes de começar</p>
+    <h2 class="slide__heading reveal" data-en="How to use this deck" data-pt="Como usar esta apresentação">Como usar esta apresentação</h2>
+    <div class="cardgrid cardgrid--quad">
+      <div class="card card--accent reveal"><div class="card__icon">⌨️</div><div class="card__t" data-en="Navigate" data-pt="Navegue">Navegue</div><div class="card__d" data-en="Arrow keys <code class='inline'>← →</code>, scroll, swipe, or the dots on the right." data-pt="Setas <code class='inline'>← →</code>, scroll, swipe ou os pontos à direita.">Setas <code class="inline">← →</code>, scroll, swipe ou os pontos à direita.</div></div>
+      <div class="card card--blue reveal"><div class="card__icon">🌐</div><div class="card__t" data-en="Language" data-pt="Idioma">Idioma</div><div class="card__d" data-en="Toggle <strong>PT-BR / EN</strong> in the top bar — switches instantly, anywhere." data-pt="Alterne <strong>PT-BR / EN</strong> na barra superior — troca na hora, em qualquer slide.">Alterne <strong>PT-BR / EN</strong> na barra superior — troca na hora, em qualquer slide.</div></div>
+      <div class="card card--green reveal"><div class="card__icon">🎨</div><div class="card__t" data-en="Theme" data-pt="Tema">Tema</div><div class="card__d" data-en="<strong>Dark</strong> or <strong>Light</strong> — your choice is remembered." data-pt="<strong>Escuro</strong> ou <strong>Claro</strong> — sua escolha fica salva.">Escuro ou Claro — sua escolha fica salva.</div></div>
+      <div class="card card--amber reveal"><div class="card__icon">🎯</div><div class="card__t" data-en="The goal" data-pt="O objetivo">O objetivo</div><div class="card__d" data-en="By the end: <strong>one app idea chosen</strong> + a Business Model Canvas drafted." data-pt="No fim: <strong>uma ideia escolhida</strong> + um Business Model Canvas rascunhado.">No fim: <strong>uma ideia escolhida</strong> + um Business Model Canvas rascunhado.</div></div>
+    </div>
+  </section>
+
+  <!-- 3 ═══ MODULE: LAYER ZERO ═══ -->
+  <section class="slide slide--module">
+    <div class="mod-num">00</div>
+    <p class="mod-k reveal" data-en="Module 00" data-pt="Módulo 00">Módulo 00</p>
+    <h2 class="mod-t reveal" data-en="Layer Zero — the mental shift" data-pt="Layer Zero — a virada mental">Layer Zero — a virada mental</h2>
+    <p class="mod-d reveal" data-en="The bottleneck is no longer whether you can code. It's whether you can think, decide and direct." data-pt="O gargalo não é mais saber programar. É saber pensar, decidir e direcionar.">O gargalo não é mais saber programar. É saber pensar, decidir e direcionar.</p>
+  </section>
+
+  <!-- 4 ═══ THE THESIS (split) ═══ -->
+  <section class="slide slide--split">
+    <div class="slide__panels">
+      <div class="slide__panel slide__panel--left">
+        <p class="slide__label reveal" data-en="The old world" data-pt="O mundo antigo">O mundo antigo</p>
+        <h2 class="slide__subheading reveal" data-en="You typed everything" data-pt="Você digitava tudo">Você digitava tudo</h2>
+        <ul class="slide__bullets cross reveal" style="margin-top:14px">
+          <li data-en="Syntax was the gatekeeper" data-pt="A sintaxe era o porteiro">A sintaxe era o porteiro</li>
+          <li data-en="Months from idea to prototype" data-pt="Meses da ideia ao protótipo">Meses da ideia ao protótipo</li>
+          <li data-en="A team to ship anything real" data-pt="Um time para lançar algo real">Um time para lançar algo real</li>
+        </ul>
+      </div>
+      <div class="slide__panel slide__panel--right">
+        <p class="slide__label reveal" data-en="Layer Zero" data-pt="Layer Zero">Layer Zero</p>
+        <h2 class="slide__subheading reveal" data-en="You direct. The AI is the stage crew." data-pt="Você dirige. A IA é a equipe de palco.">Você dirige. A IA é a equipe de palco.</h2>
+        <ul class="slide__bullets check reveal" style="margin-top:14px">
+          <li data-en="You bring the judgment & the WHY" data-pt="Você traz o julgamento e o PORQUÊ">Você traz o julgamento e o PORQUÊ</li>
+          <li data-en="Idea to live app in days" data-pt="Da ideia ao app no ar em dias">Da ideia ao app no ar em dias</li>
+          <li data-en="One person + AI ships real things" data-pt="Uma pessoa + IA lança coisas reais">Uma pessoa + IA lança coisas reais</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 ═══ LEONARDO'S ARC (steps) ═══ -->
+  <section class="slide scrollable">
+    <p class="slide__label reveal" data-en="Why listen to me" data-pt="Por que me ouvir">Por que me ouvir</p>
+    <h2 class="slide__heading reveal" data-en="If a finance guy can do it…" data-pt="Se um cara de finanças consegue…">Se um cara de finanças consegue…</h2>
+    <div class="steps">
+      <div class="step reveal"><div class="step__n">1</div><div><div class="step__t" data-en="Finance & numbers" data-pt="Finanças e números">Finanças e números</div><div class="step__d" data-en="Family credit business → systems technician in Paraguay → MSc in Finance (UFRGS), published in the Brazilian Review of Finance." data-pt="Negócio de crédito da família → técnico em sistemas no Paraguai → Mestre em Finanças (UFRGS), publicado na Brazilian Review of Finance.">Negócio de crédito da família → técnico em sistemas no Paraguai → Mestre em Finanças (UFRGS), publicado na Brazilian Review of Finance.</div></div></div>
+      <div class="step reveal"><div class="step__n">2</div><div><div class="step__t" data-en="The classroom" data-pt="A sala de aula">A sala de aula</div><div class="step__d" data-en="Years as an undergraduate professor of Financial Mathematics & Budget Management. Contracts Manager at Itaipu Binacional." data-pt="Anos como professor de Matemática Financeira e Gestão Orçamentária na graduação. Gestor de Contratos na Itaipu Binacional.">Anos como professor de Matemática Financeira e Gestão Orçamentária na graduação. Gestor de Contratos na Itaipu Binacional.</div></div></div>
+      <div class="step reveal"><div class="step__n">3</div><div><div class="step__t" data-en="Into Big Data" data-pt="Para o Big Data">Para o Big Data</div><div class="step__d" data-en="Since 2022: data projects for CPFL, GSK, AB-InBev/BEES, Unilever. 50+ active certifications." data-pt="Desde 2022: projetos de dados para CPFL, GSK, AB-InBev/BEES, Unilever. 50+ certificações ativas.">Desde 2022: projetos de dados para CPFL, GSK, AB-InBev/BEES, Unilever. 50+ certificações ativas.</div></div></div>
+      <div class="step reveal"><div class="step__n">4</div><div><div class="step__t" data-en="Today — Tech Lead + builder" data-pt="Hoje — Tech Lead + construtor">Hoje — Tech Lead + construtor</div><div class="step__d" data-en="AI Data Engineering Tech Lead at NTT DATA (Bradesco). On the side, with AI, I ship the apps you'll see next." data-pt="Tech Lead de Eng. de Dados com IA na NTT DATA (Bradesco). Nas horas vagas, com IA, lanço os apps que você verá a seguir.">Tech Lead de Eng. de Dados com IA na NTT DATA (Bradesco). Nas horas vagas, com IA, lanço os apps que você verá a seguir.</div></div></div>
+    </div>
+  </section>
+
+  <!-- 6 ═══ MODULE: THE PROOF ═══ -->
+  <section class="slide slide--module">
+    <div class="mod-num">01</div>
+    <p class="mod-k reveal" data-en="Module 01" data-pt="Módulo 01">Módulo 01</p>
+    <h2 class="mod-t reveal" data-en="The proof — what's already shipped" data-pt="A prova — o que já está no ar">A prova — o que já está no ar</h2>
+    <p class="mod-d reveal" data-en="Not slides about apps. Real apps, live URLs, real users — all built by one person with AI, at near-zero cost." data-pt="Não são slides sobre apps. São apps reais, no ar, com usuários — feitos por uma pessoa com IA, a custo quase zero.">Não são slides sobre apps. São apps reais, no ar, com usuários — feitos por uma pessoa com IA, a custo quase zero.</p>
+  </section>
+
+  <!-- 7 ═══ SIX THINGS, ONE BUILDER (overview grid) ═══ -->
+  <section class="slide scrollable">
+    <p class="slide__label reveal" data-en="The portfolio" data-pt="O portfólio">O portfólio</p>
+    <h2 class="slide__heading reveal" data-en="Six things, one builder" data-pt="Seis coisas, um construtor">Seis coisas, um construtor</h2>
+    <div class="cardgrid">
+      <div class="card card--accent reveal"><div class="card__icon">💰</div><div class="card__t">Caixa Forte</div><div class="card__d" data-en="Personal finance for Brazilians — clarity without spreadsheets." data-pt="Finanças pessoais para brasileiros — clareza sem planilha.">Finanças pessoais para brasileiros — clareza sem planilha.</div></div>
+      <div class="card card--blue reveal"><div class="card__icon">📊</div><div class="card__t">Foco Contábil</div><div class="card__d" data-en="Platform for Brazilian accounting offices — cadastro to caixa." data-pt="Plataforma para escritórios contábeis — do cadastro ao caixa.">Plataforma para escritórios contábeis — do cadastro ao caixa.</div></div>
+      <div class="card card--green reveal"><div class="card__icon">🎓</div><div class="card__t">Amazing School</div><div class="card__d" data-en="Teacher-first English platform — the AI is the stage crew." data-pt="Plataforma de inglês focada no professor — a IA é a equipe de palco.">Plataforma de inglês focada no professor — a IA é a equipe de palco.</div></div>
+      <div class="card card--amber reveal"><div class="card__icon">🏥</div><div class="card__t">CareConnect</div><div class="card__d" data-en="Management for Home Care agencies — 3 profiles, one codebase." data-pt="Gestão para agências de Home Care — 3 perfis, uma base de código.">Gestão para agências de Home Care — 3 perfis, uma base de código.</div></div>
+      <div class="card card--accent reveal"><div class="card__icon">🗼</div><div class="card__t">Mirante dos Dados</div><div class="card__d" data-en="Open lakehouse for Brazilian public data — 2.5bi rows, US$70 lifetime." data-pt="Lakehouse aberta de dados públicos — 2,5bi linhas, US$70 no total.">Lakehouse aberta de dados públicos — 2,5bi linhas, US$70 no total.</div></div>
+      <div class="card card--blue reveal"><div class="card__icon">🎬</div><div class="card__t" data-en="Presentations + CV" data-pt="Apresentações + CV">Apresentações + CV</div><div class="card__d" data-en="Courses engineered like software — like this very deck." data-pt="Cursos feitos como software — como esta própria apresentação.">Cursos feitos como software — como esta própria apresentação.</div></div>
+    </div>
+  </section>
+
+  <!-- 8 ═══ CAIXA FORTE ═══ -->
+  <section class="slide scrollable">
+    <p class="slide__label reveal" data-en="Showcase · personal finance" data-pt="Vitrine · finanças pessoais">Vitrine · finanças pessoais</p>
+    <h2 class="slide__heading reveal">Caixa Forte — <span class="kw" data-en="clarity over your money" data-pt="clareza sobre o seu dinheiro">clareza sobre o seu dinheiro</span></h2>
+    <p class="slide__body reveal" style="margin-top:10px" data-en="Personal-finance control for Brazilians who want clarity — no spreadsheet, no friction, no subscription. Voice-entry via Whisper, AI categorization via Groq." data-pt="Controle financeiro pessoal para brasileiros que querem clareza — sem planilha, sem atrito, sem assinatura. Lançamento por voz com Whisper, categorização por IA com Groq.">Controle financeiro pessoal para brasileiros que querem clareza — sem planilha, sem atrito, sem assinatura. Lançamento por voz com Whisper, categorização por IA com Groq.</p>
+    <div class="slide__kpis">
+      <div class="slide__kpi reveal"><div class="slide__kpi-val">9.0<span style="font-size:.5em;color:var(--text-muted)">/10</span></div><div class="slide__kpi-label" data-en="Council verdict" data-pt="Veredito do Conselho">Veredito do Conselho</div></div>
+      <div class="slide__kpi reveal"><div class="slide__kpi-val">90</div><div class="slide__kpi-label" data-en="tests passing" data-pt="testes passando">testes passando</div></div>
+      <div class="slide__kpi reveal"><div class="slide__kpi-val">R$ 0</div><div class="slide__kpi-label" data-en="forever" data-pt="para sempre">para sempre</div></div>
+      <div class="slide__kpi reveal"><div class="slide__kpi-val">Next.js</div><div class="slide__kpi-label">+ Supabase + Groq</div></div>
+    </div>
+    <div class="callout reveal"><div class="callout__icon">🔗</div><div><div class="callout__t" data-en="Live now" data-pt="No ar agora">No ar agora</div><div class="callout__d"><a href="https://caixa-forte-app.vercel.app/" target="_blank" rel="noopener noreferrer" style="color:var(--accent-soft)">caixa-forte-app.vercel.app</a></div></div></div>
+  </section>
+
+  <!-- 9 ═══ FOCO CONTÁBIL ═══ -->
+  <section class="slide scrollable">
+    <p class="slide__label reveal" data-en="Showcase · accounting SaaS" data-pt="Vitrine · SaaS contábil">Vitrine · SaaS contábil</p>
+    <h2 class="slide__heading reveal">Foco Contábil — <span class="kw" data-en="from cadastro to caixa" data-pt="do cadastro ao caixa">do cadastro ao caixa</span></h2>
+    <p class="slide__body reveal" style="margin-top:10px" data-en="Multi-tenant platform for Brazilian accounting offices: auto-registration via Receita Federal, recurring contracts, Pix + Boleto billing, native NFS-e, balance sheet & DRE with legal grounding — total isolation via Postgres RLS." data-pt="Plataforma multi-tenant para escritórios contábeis: cadastro automático via Receita Federal, contratos recorrentes, cobrança Pix + Boleto, NFS-e nativa, balanço e DRE com fundamentação legal — isolamento total via Postgres RLS.">Plataforma multi-tenant para escritórios contábeis: cadastro automático via Receita Federal, contratos recorrentes, cobrança Pix + Boleto, NFS-e nativa, balanço e DRE com fundamentação legal — isolamento total via Postgres RLS.</p>
+    <div class="slide__kpis">
+      <div class="slide__kpi reveal"><div class="slide__kpi-val">RLS</div><div class="slide__kpi-label" data-en="every table" data-pt="em toda tabela">em toda tabela</div></div>
+      <div class="slide__kpi reveal"><div class="slide__kpi-val">Lei 6.404</div><div class="slide__kpi-label" data-en="art. 178 + 187" data-pt="art. 178 + 187">art. 178 + 187</div></div>
+      <div class="slide__kpi reveal"><div class="slide__kpi-val">WCAG 2.2</div><div class="slide__kpi-label">AA</div></div>
+      <div class="slide__kpi reveal"><div class="slide__kpi-val">Asaas</div><div class="slide__kpi-label">Pix + Boleto</div></div>
+    </div>
+    <div class="callout reveal"><div class="callout__icon">🔗</div><div><div class="callout__t" data-en="Live now" data-pt="No ar agora">No ar agora</div><div class="callout__d"><a href="https://foco-contabil.vercel.app/" target="_blank" rel="noopener noreferrer" style="color:var(--accent-soft)">foco-contabil.vercel.app</a></div></div></div>
+  </section>
+
+  <!-- 10 ═══ AMAZING SCHOOL ═══ -->
+  <section class="slide scrollable">
+    <p class="slide__label reveal" data-en="Showcase · ed-tech" data-pt="Vitrine · ed-tech">Vitrine · ed-tech</p>
+    <h2 class="slide__heading reveal">Amazing School — <span class="kw" data-en="the teacher is the star" data-pt="o professor é a estrela">o professor é a estrela</span></h2>
+    <p class="slide__body reveal" style="margin-top:10px" data-en="A teacher-first platform for Brazilians learning US English. Not a self-study app — the infrastructure that amplifies one human teacher. The AI drafts, tracks pronunciation and answers at 11pm; the student always belongs to the teacher." data-pt="Plataforma focada no professor para brasileiros aprendendo inglês americano. Não é app de autoestudo — é a infraestrutura que amplifica um professor humano. A IA rascunha, acompanha pronúncia e responde às 23h; o aluno é sempre do professor.">Plataforma focada no professor para brasileiros aprendendo inglês americano. Não é app de autoestudo — é a infraestrutura que amplifica um professor humano. A IA rascunha, acompanha pronúncia e responde às 23h; o aluno é sempre do professor.</p>
+    <div class="slide__kpis">
+      <div class="slide__kpi reveal"><div class="slide__kpi-val">v1.0</div><div class="slide__kpi-label" data-en="shipped" data-pt="lançado">lançado</div></div>
+      <div class="slide__kpi reveal"><div class="slide__kpi-val">15</div><div class="slide__kpi-label" data-en="Whisper pronunciation probes" data-pt="provas de pronúncia Whisper">provas de pronúncia Whisper</div></div>
+      <div class="slide__kpi reveal"><div class="slide__kpi-val">MIT</div><div class="slide__kpi-label" data-en="open source" data-pt="código aberto">código aberto</div></div>
+      <div class="slide__kpi reveal"><div class="slide__kpi-val">$ 0</div><div class="slide__kpi-label" data-en="to run" data-pt="para rodar">para rodar</div></div>
+    </div>
+    <div class="callout reveal"><div class="callout__icon">🔗</div><div><div class="callout__t" data-en="Live now" data-pt="No ar agora">No ar agora</div><div class="callout__d"><a href="https://amazing-school-app.vercel.app/" target="_blank" rel="noopener noreferrer" style="color:var(--accent-soft)">amazing-school-app.vercel.app</a></div></div></div>
+  </section>
+
+  <!-- 11 ═══ MIRANTE (KPIs) ═══ -->
+  <section class="slide scrollable">
+    <p class="slide__label reveal" data-en="Showcase · data engineering" data-pt="Vitrine · engenharia de dados">Vitrine · engenharia de dados</p>
+    <h2 class="slide__heading reveal">Mirante dos Dados — <span class="kw" data-en="a production lakehouse, for US$70" data-pt="uma lakehouse de produção, por US$70">uma lakehouse de produção, por US$70</span></h2>
+    <p class="slide__body reveal" style="margin-top:10px" data-en="An open lakehouse ingesting Brazilian public microdata into a Bronze→Silver→Gold medallion on Delta Lake, feeding a live React platform and 7 peer-reviewed working papers. This is also home to the Council you'll meet next." data-pt="Uma lakehouse aberta que ingere microdados públicos brasileiros numa medalhão Bronze→Silver→Gold sobre Delta Lake, alimentando uma plataforma React ao vivo e 7 working papers revisados. É também a casa do Conselho que você conhecerá a seguir.">Uma lakehouse aberta que ingere microdados públicos brasileiros numa medalhão Bronze→Silver→Gold sobre Delta Lake, alimentando uma plataforma React ao vivo e 7 working papers revisados. É também a casa do Conselho que você conhecerá a seguir.</p>
+    <div class="slide__kpis">
+      <div class="slide__kpi reveal"><div class="slide__kpi-val">2,53 bi</div><div class="slide__kpi-label" data-en="rows · biggest table" data-pt="linhas · maior tabela">linhas · maior tabela</div></div>
+      <div class="slide__kpi reveal"><div class="slide__kpi-val">US$ 70</div><div class="slide__kpi-label" data-en="lifetime cost" data-pt="custo total">custo total</div></div>
+      <div class="slide__kpi reveal"><div class="slide__kpi-val">7</div><div class="slide__kpi-label" data-en="working papers" data-pt="working papers">working papers</div></div>
+      <div class="slide__kpi reveal"><div class="slide__kpi-val">5+1</div><div class="slide__kpi-label" data-en="data verticals + FinOps" data-pt="verticais + FinOps">verticais + FinOps</div></div>
+    </div>
+    <div class="callout reveal"><div class="callout__icon">🔗</div><div><div class="callout__t" data-en="Live now" data-pt="No ar agora">No ar agora</div><div class="callout__d"><a href="https://leonardochalhoub.github.io/mirante-dos-dados-br/" target="_blank" rel="noopener noreferrer" style="color:var(--accent-soft)">leonardochalhoub.github.io/mirante-dos-dados-br</a></div></div></div>
+  </section>
+
+  <!-- 12 ═══ THE REST + CV ═══ -->
+  <section class="slide scrollable">
+    <p class="slide__label reveal" data-en="Showcase · and more" data-pt="Vitrine · e mais">Vitrine · e mais</p>
+    <h2 class="slide__heading reveal" data-en="The method shows everywhere" data-pt="O método aparece em tudo">O método aparece em tudo</h2>
+    <div class="cardgrid">
+      <div class="card card--amber reveal"><div class="card__icon">🏥</div><div class="card__t">CareConnect</div><div class="card__d" data-en="Home-care agency management: shift schedule, patient records, payroll, family portal, Asaas billing — three user profiles in one app." data-pt="Gestão de agência de home care: escala de plantões, prontuário, folha, portal da família, cobrança Asaas — três perfis num só app.">Gestão de agência de home care: escala de plantões, prontuário, folha, portal da família, cobrança Asaas — três perfis num só app.</div></div>
+      <div class="card card--blue reveal"><div class="card__icon">🎬</div><div class="card__t" data-en="Professional Presentations" data-pt="Professional Presentations">Professional Presentations</div><div class="card__d" data-en="Courses engineered like software — single-file HTML decks, bilingual, themed. The DQX Masterclass: 10 modules, ~128 slides. This deck uses the same engine." data-pt="Cursos feitos como software — decks HTML de arquivo único, bilíngues, com temas. A DQX Masterclass: 10 módulos, ~128 slides. Esta apresentação usa o mesmo motor.">Cursos feitos como software — decks HTML de arquivo único, bilíngues, com temas. A DQX Masterclass: 10 módulos, ~128 slides. Esta apresentação usa o mesmo motor.</div></div>
+      <div class="card card--accent reveal"><div class="card__icon">📄</div><div class="card__t" data-en="The CV itself" data-pt="O próprio CV">O próprio CV</div><div class="card__d" data-en="Engineered in LaTeX, ATS-optimized, built with the same AI-first method. 50+ active certifications, published finance research." data-pt="Feito em LaTeX, otimizado para ATS, com o mesmo método AI-first. 50+ certificações ativas, pesquisa em finanças publicada.">Feito em LaTeX, otimizado para ATS, com o mesmo método AI-first. 50+ certificações ativas, pesquisa em finanças publicada.</div></div>
+    </div>
+    <div class="callout callout--green reveal"><div class="callout__icon">💡</div><div><div class="callout__t" data-en="The pattern" data-pt="O padrão">O padrão</div><div class="callout__d" data-en="One repeatable, free stack — Next.js · Supabase · Groq · Vercel — and a method. That's what we're transferring to you." data-pt="Uma stack repetível e gratuita — Next.js · Supabase · Groq · Vercel — e um método. É isso que vamos transferir para você.">Uma stack repetível e gratuita — Next.js · Supabase · Groq · Vercel — e um método. É isso que vamos transferir para você.</div></div></div>
+  </section>
+
+  <!-- 13 ═══ MODULE: THE COUNCIL ═══ -->
+  <section class="slide slide--module">
+    <div class="mod-num">02</div>
+    <p class="mod-k reveal" data-en="Module 02" data-pt="Módulo 02">Módulo 02</p>
+    <h2 class="mod-t reveal" data-en="Meet the Council" data-pt="Conheça o Conselho">Conheça o Conselho</h2>
+    <p class="mod-d reveal" data-en="Four AI advisors from Mirante dos Dados. Each judges an idea through one demanding lens. They are how we decide — not vibes." data-pt="Quatro conselheiros de IA do Mirante dos Dados. Cada um julga uma ideia por uma lente exigente. É assim que decidimos — não no achismo.">Quatro conselheiros de IA do Mirante dos Dados. Cada um julga uma ideia por uma lente exigente. É assim que decidimos — não no achismo.</p>
+  </section>
+
+  <!-- 14 ═══ THE FOUR COUNCILLORS ═══ -->
+  <section class="slide scrollable">
+    <p class="slide__label reveal" data-en="Four lenses" data-pt="Quatro lentes">Quatro lentes</p>
+    <h2 class="slide__heading reveal" data-en="The four councillors" data-pt="Os quatro conselheiros">Os quatro conselheiros</h2>
+    <div class="cardgrid cardgrid--quad">
+      <div class="card card--accent reveal"><div class="card__icon">💰</div><div class="card__t" data-en="Finance" data-pt="Finanças">Finanças</div><div class="card__d" data-en="PhD, sold a data-science boutique. Asks: <strong>“Does it survive a stress-test? Are the unit economics real?”</strong>" data-pt="PhD, vendeu uma boutique de data science. Pergunta: <strong>“Sobrevive a um stress-test? A conta fecha de verdade?”</strong>">PhD, vendeu uma boutique de data science. Pergunta: <strong>“Sobrevive a um stress-test? A conta fecha de verdade?”</strong></div></div>
+      <div class="card card--green reveal"><div class="card__icon">🎯</div><div class="card__t" data-en="Management" data-pt="Administração">Administração</div><div class="card__d" data-en="Full professor; lens of Sinek, Harari, Carrey. Asks: <strong>“What's the WHY? Can it make money? Real change or cargo cult?”</strong>" data-pt="Professor titular; lente de Sinek, Harari, Carrey. Pergunta: <strong>“Qual o PORQUÊ? Dá dinheiro? Mudança real ou cargo cult?”</strong>">Professor titular; lente de Sinek, Harari, Carrey. Pergunta: <strong>“Qual o PORQUÊ? Dá dinheiro? Mudança real ou cargo cult?”</strong></div></div>
+      <div class="card card--blue reveal"><div class="card__icon">🛠️</div><div class="card__t" data-en="Software Eng." data-pt="Eng. de Software">Eng. de Software</div><div class="card__d" data-en="Post-doc, DOS-1995 → cloud-2026. Asks: <strong>“What stack? Is it testable, reproducible, shippable by Week 4?”</strong>" data-pt="Pós-doutor, DOS-1995 → cloud-2026. Pergunta: <strong>“Qual stack? É testável, reproduzível, lançável na Semana 4?”</strong>">Pós-doutor, DOS-1995 → cloud-2026. Pergunta: <strong>“Qual stack? É testável, reproduzível, lançável na Semana 4?”</strong></div></div>
+      <div class="card card--amber reveal"><div class="card__icon">🎨</div><div class="card__t" data-en="Design" data-pt="Design">Design</div><div class="card__d" data-en="PhD InfoViz/HCI; lens of Tufte, Norman, Bostock. Asks: <strong>“Is it usable, accessible, legible? Would a human enjoy it?”</strong>" data-pt="PhD InfoViz/HCI; lente de Tufte, Norman, Bostock. Pergunta: <strong>“É usável, acessível, legível? Um humano gostaria disso?”</strong>">PhD InfoViz/HCI; lente de Tufte, Norman, Bostock. Pergunta: <strong>“É usável, acessível, legível? Um humano gostaria disso?”</strong></div></div>
+    </div>
+  </section>
+
+  <!-- 15 ═══ LIVE DEMO ═══ -->
+  <section class="slide slide--lab scrollable">
+    <span class="lab-badge reveal" data-en="● Live demo" data-pt="● Demo ao vivo">● Demo ao vivo</span>
+    <h2 class="slide__heading reveal" data-en="Let's ask the Council — live" data-pt="Vamos perguntar ao Conselho — ao vivo">Vamos perguntar ao Conselho — ao vivo</h2>
+    <p class="slide__body reveal" style="margin-top:10px" data-en="I'll open a terminal, paste this, and we watch a real agent form an opinion on one of our ideas. No script, no editing." data-pt="Vou abrir um terminal, colar isto, e assistimos um agente real formar uma opinião sobre uma das nossas ideias. Sem roteiro, sem edição.">Vou abrir um terminal, colar isto, e assistimos um agente real formar uma opinião sobre uma das nossas ideias. Sem roteiro, sem edição.</p>
+    <div class="promptwin reveal">
+      <div class="promptwin__bar"><span class="promptwin__dot promptwin__dot--r"></span><span class="promptwin__dot promptwin__dot--y"></span><span class="promptwin__dot promptwin__dot--g"></span><span class="promptwin__name">claude code — conselho</span></div>
+      <div class="promptwin__body" data-en="<span class='pc'># ask the Management councillor for a candid take</span>
+Use the <span class='pp'>conselheiro-administrador</span> agent to give a candid
+opinion on this app idea: &quot;<span class='pp'>&lt;our idea&gt;</span>&quot; — is there a
+real WHY? Can it make money? Be direct, one paragraph." data-pt="<span class='pc'># pede um parecer franco ao conselheiro de Administração</span>
+Use o agente <span class='pp'>conselheiro-administrador</span> para dar um
+parecer franco sobre esta ideia de app: &quot;<span class='pp'>&lt;nossa ideia&gt;</span>&quot; —
+existe um PORQUÊ real? Dá dinheiro? Seja direto, um parágrafo."></div>
+    </div>
+    <div class="callout callout--green reveal"><div class="callout__icon">👀</div><div><div class="callout__t" data-en="Watch for" data-pt="Observe">Observe</div><div class="callout__d" data-en="The agent doesn't flatter. If the idea is weak, it says so — that's the point." data-pt="O agente não bajula. Se a ideia é fraca, ele fala — esse é o ponto.">O agente não bajula. Se a ideia é fraca, ele fala — esse é o ponto.</div></div></div>
+  </section>
+
+  <!-- 16 ═══ MODULE: 20 IDEAS ═══ -->
+  <section class="slide slide--module">
+    <div class="mod-num">03</div>
+    <p class="mod-k reveal" data-en="Module 03" data-pt="Módulo 03">Módulo 03</p>
+    <h2 class="mod-t reveal" data-en="20 ideas (and yours)" data-pt="20 ideias (e a sua)">20 ideias (e a sua)</h2>
+    <p class="mod-d reveal" data-en="A menu to spark you, not to cap you. Scores are the Council's quick pre-take: 💰 finance · 🎯 why/money · 🛠️ build · 🎨 design." data-pt="Um cardápio para te provocar, não para te limitar. As notas são o pré-parecer do Conselho: 💰 finanças · 🎯 porquê/dinheiro · 🛠️ construção · 🎨 design.">Um cardápio para te provocar, não para te limitar. As notas são o pré-parecer do Conselho: 💰 finanças · 🎯 porquê/dinheiro · 🛠️ construção · 🎨 design.</p>
+  </section>
+
+  <!-- 17 ═══ IDEAS: FINANCE ═══ -->
+  <section class="slide scrollable">
+    <p class="slide__label reveal">🏦 <span data-en="Finance · Accounting · Fintech" data-pt="Finanças · Contábil · Fintech">Finanças · Contábil · Fintech</span></p>
+    <h2 class="slide__heading reveal" data-en="Your home turf" data-pt="Seu território">Seu território</h2>
+    <table class="dtable reveal">
+      <thead><tr><th>#</th><th data-en="Idea" data-pt="Ideia">Ideia</th><th data-en="What it does" data-pt="O que faz">O que faz</th><th>💰🎯🛠️🎨</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td class="idea">MEI Descomplicado</td><td data-en="DAS reminders, revenue-limit tracker, 1-tap invoice" data-pt="Lembrete de DAS, limite de faturamento, nota em 1 toque">Lembrete de DAS, limite de faturamento, nota em 1 toque</td><td class="sc">●●●●● ●●●●● ●●●● ●●●●</td></tr>
+        <tr><td>2</td><td class="idea">Racha Pix</td><td data-en="Split group expenses; OCR the receipt → who owes what" data-pt="Divide a conta do grupo; OCR no recibo → quem deve quanto">Divide a conta do grupo; OCR no recibo → quem deve quanto</td><td class="sc">●●●● ●●●● ●●●● ●●●●●</td></tr>
+        <tr><td>3</td><td class="idea">Simulador de Financiamento</td><td data-en="Price vs SAC simulator with plain-PT AI advice" data-pt="Simulador Price vs SAC com explicação em PT pela IA">Simulador Price vs SAC com explicação em PT pela IA</td><td class="sc">●●●●● ●●●● ●●●●● ●●●●</td></tr>
+        <tr><td>4</td><td class="idea">Orçamento de Festa</td><td data-en="Event/wedding budget + vendor & payment tracking" data-pt="Orçamento de festa/casamento + fornecedores e pagamentos">Orçamento de festa/casamento + fornecedores e pagamentos</td><td class="sc">●●● ●●●● ●●●● ●●●●</td></tr>
+        <tr><td>5</td><td class="idea">Investidor Iniciante</td><td data-en="Beginner portfolio tracker that explains every move" data-pt="Carteira para iniciante que explica cada movimento">Carteira para iniciante que explica cada movimento</td><td class="sc">●●●● ●●●● ●●●● ●●●●</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 18 ═══ IDEAS: EDUCATION ═══ -->
+  <section class="slide scrollable">
+    <p class="slide__label reveal">📚 <span data-en="Education · Productivity" data-pt="Educação · Produtividade">Educação · Produtividade</span></p>
+    <h2 class="slide__heading reveal" data-en="Things students relate to" data-pt="Coisas com que alunos se identificam">Coisas com que alunos se identificam</h2>
+    <table class="dtable reveal">
+      <thead><tr><th>#</th><th data-en="Idea" data-pt="Ideia">Ideia</th><th data-en="What it does" data-pt="O que faz">O que faz</th><th>💰🎯🛠️🎨</th></tr></thead>
+      <tbody>
+        <tr><td>6</td><td class="idea">Flashcards IA</td><td data-en="Drop a PDF → AI makes spaced-repetition cards" data-pt="Solta um PDF → IA gera cards de repetição espaçada">Solta um PDF → IA gera cards de repetição espaçada</td><td class="sc">●●●● ●●●●● ●●●● ●●●●</td></tr>
+        <tr><td>7</td><td class="idea">Redação ENEM Coach</td><td data-en="AI essay grader on the 5 ENEM competencies" data-pt="Corretor de redação IA nas 5 competências do ENEM">Corretor de redação IA nas 5 competências do ENEM</td><td class="sc">●●●● ●●●●● ●●●● ●●●●</td></tr>
+        <tr><td>8</td><td class="idea">Plano de Aula</td><td data-en="Lesson-plan generator for teachers" data-pt="Gerador de plano de aula para professores">Gerador de plano de aula para professores</td><td class="sc">●●● ●●●● ●●●●● ●●●●</td></tr>
+        <tr><td>9</td><td class="idea">Clube da Matemática</td><td data-en="Gamified math practice with AI hints" data-pt="Prática de matemática gamificada com dicas de IA">Prática de matemática gamificada com dicas de IA</td><td class="sc">●●● ●●●● ●●●● ●●●●●</td></tr>
+        <tr><td>10</td><td class="idea">TCC Assistant</td><td data-en="Structures a thesis: outline, citations, ABNT" data-pt="Estrutura o TCC: roteiro, citações, ABNT">Estrutura o TCC: roteiro, citações, ABNT</td><td class="sc">●●● ●●●● ●●●● ●●●</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 19 ═══ IDEAS: LOCAL ═══ -->
+  <section class="slide scrollable">
+    <p class="slide__label reveal">🇧🇷 <span data-en="Local · Brazilian real-world pain" data-pt="Local · Dor real brasileira">Local · Dor real brasileira</span></p>
+    <h2 class="slide__heading reveal" data-en="High impact, close to home" data-pt="Alto impacto, perto de casa">Alto impacto, perto de casa</h2>
+    <table class="dtable reveal">
+      <thead><tr><th>#</th><th data-en="Idea" data-pt="Ideia">Ideia</th><th data-en="What it does" data-pt="O que faz">O que faz</th><th>💰🎯🛠️🎨</th></tr></thead>
+      <tbody>
+        <tr><td>11</td><td class="idea">Pequeno Comércio</td><td data-en="WhatsApp-order manager: catalog + Pix + order list" data-pt="Gestor de pedidos no WhatsApp: catálogo + Pix + pedidos">Gestor de pedidos no WhatsApp: catálogo + Pix + pedidos</td><td class="sc">●●●●● ●●●●● ●●●● ●●●●</td></tr>
+        <tr><td>12</td><td class="idea">Cuidador Solo</td><td data-en="Micro-CareConnect for independent caregivers" data-pt="Micro-CareConnect para cuidadores autônomos">Micro-CareConnect para cuidadores autônomos</td><td class="sc">●●●● ●●●● ●●●● ●●●●</td></tr>
+        <tr><td>13</td><td class="idea">Síndico Fácil</td><td data-en="Condo: shared expenses, notices, simple voting" data-pt="Condomínio: rateio, avisos, votação simples">Condomínio: rateio, avisos, votação simples</td><td class="sc">●●●● ●●●● ●●●● ●●●●</td></tr>
+        <tr><td>14</td><td class="idea">Preço da Feira</td><td data-en="Crowdsourced neighborhood grocery-price compare" data-pt="Comparador colaborativo de preços do bairro">Comparador colaborativo de preços do bairro</td><td class="sc">●●● ●●●● ●●● ●●●●</td></tr>
+        <tr><td>15</td><td class="idea">Brechó do Bairro</td><td data-en="Local donation & second-hand marketplace" data-pt="Marketplace local de doação e segunda mão">Marketplace local de doação e segunda mão</td><td class="sc">●●● ●●●● ●●●● ●●●●</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 20 ═══ IDEAS: WILD ═══ -->
+  <section class="slide scrollable">
+    <p class="slide__label reveal">✨ <span data-en="Wide-open · Surprising" data-pt="Aberto · Surpreendente">Aberto · Surpreendente</span></p>
+    <h2 class="slide__heading reveal" data-en="The ones that make the room quiet" data-pt="As que silenciam a sala">As que silenciam a sala</h2>
+    <table class="dtable reveal">
+      <thead><tr><th>#</th><th data-en="Idea" data-pt="Ideia">Ideia</th><th data-en="What it does" data-pt="O que faz">O que faz</th><th>💰🎯🛠️🎨</th></tr></thead>
+      <tbody>
+        <tr><td>16</td><td class="idea">Memória Viva</td><td data-en="Interview a grandparent → Whisper+LLM → a written memoir" data-pt="Entreviste um avô → Whisper+LLM → uma memória escrita">Entreviste um avô → Whisper+LLM → uma memória escrita</td><td class="sc">●●● ●●●●● ●●●● ●●●●●</td></tr>
+        <tr><td>17</td><td class="idea">Diário com IA</td><td data-en="Voice journaling → mood insights over time" data-pt="Diário por voz → insights de humor ao longo do tempo">Diário por voz → insights de humor ao longo do tempo</td><td class="sc">●●● ●●●● ●●●● ●●●●</td></tr>
+        <tr><td>18</td><td class="idea">Tem na Geladeira?</td><td data-en="Photo your fridge → AI suggests recipes" data-pt="Foto da geladeira → IA sugere receitas">Foto da geladeira → IA sugere receitas</td><td class="sc">●●● ●●●● ●●●● ●●●●●</td></tr>
+        <tr><td>19</td><td class="idea">Histórias para Dormir</td><td data-en="Personalized kids' bedtime stories (PT-BR)" data-pt="Histórias de ninar personalizadas (PT-BR)">Histórias de ninar personalizadas (PT-BR)</td><td class="sc">●●● ●●●● ●●●● ●●●●●</td></tr>
+        <tr><td>20</td><td class="idea">Olhos</td><td data-en="Describe-my-surroundings camera for low-vision users" data-pt="Câmera que descreve o ambiente para baixa visão">Câmera que descreve o ambiente para baixa visão</td><td class="sc">●● ●●●●● ●●● ●●●●</td></tr>
+      </tbody>
+    </table>
+    <div class="callout reveal"><div class="callout__icon">🔥</div><div><div class="callout__t" data-en="Wildcards welcome" data-pt="Curingas são bem-vindos">Curingas são bem-vindos</div><div class="callout__d" data-en="Your own pain point beats any of these 20. What annoys you every week?" data-pt="A sua própria dor vale mais que qualquer uma destas 20. O que te incomoda toda semana?">A sua própria dor vale mais que qualquer uma destas 20. O que te incomoda toda semana?</div></div></div>
+  </section>
+
+  <!-- 21 ═══ HOW WE DECIDE ═══ -->
+  <section class="slide slide--split">
+    <div class="slide__panels">
+      <div class="slide__panel slide__panel--left">
+        <p class="slide__label reveal" data-en="The method" data-pt="O método">O método</p>
+        <h2 class="slide__subheading reveal" data-en="How we pick one" data-pt="Como escolhemos uma">Como escolhemos uma</h2>
+        <ul class="slide__bullets reveal" style="margin-top:14px">
+          <li data-en="Shortlist 2–3 finalists you actually feel" data-pt="Selecione 2–3 finalistas que você realmente sente">Selecione 2–3 finalistas que você realmente sente</li>
+          <li data-en="Run each past the 4 Council lenses — live" data-pt="Passe cada uma pelas 4 lentes do Conselho — ao vivo">Passe cada uma pelas 4 lentes do Conselho — ao vivo</li>
+          <li data-en="Score 💰🎯🛠️🎨; weigh WHY + buildable-by-W4" data-pt="Pontue 💰🎯🛠️🎨; pese PORQUÊ + lançável-até-S4">Pontue 💰🎯🛠️🎨; pese PORQUÊ + lançável-até-S4</li>
+          <li data-en="Decide. Commit. We build THIS one." data-pt="Decida. Assuma. Construímos ESTA.">Decida. Assuma. Construímos ESTA.</li>
+        </ul>
+      </div>
+      <div class="slide__panel slide__panel--right">
+        <div class="callout reveal" style="margin-top:0"><div class="callout__icon">⚖️</div><div><div class="callout__t" data-en="The tie-breaker" data-pt="O critério de desempate">O critério de desempate</div><div class="callout__d" data-en="When two ideas tie, pick the one with the stronger WHY — the one you'd be proud to show on Week 4." data-pt="Quando duas empatam, fique com a de PORQUÊ mais forte — a que você teria orgulho de mostrar na Semana 4.">Quando duas empatam, fique com a de PORQUÊ mais forte — a que você teria orgulho de mostrar na Semana 4.</div></div></div>
+        <div class="callout callout--amber reveal"><div class="callout__icon">⏱️</div><div><div class="callout__t" data-en="Scope guard" data-pt="Trava de escopo">Trava de escopo</div><div class="callout__d" data-en="One core flow. We can polish later — we can't ship a half-built everything." data-pt="Um fluxo central. Dá para polir depois — não dá para lançar tudo pela metade.">Um fluxo central. Dá para polir depois — não dá para lançar tudo pela metade.</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 22 ═══ THREE TO SPOTLIGHT ═══ -->
+  <section class="slide scrollable">
+    <p class="slide__label reveal" data-en="Instructor's picks" data-pt="Escolhas do instrutor">Escolhas do instrutor</p>
+    <h2 class="slide__heading reveal" data-en="Three I'd be excited to build" data-pt="Três que eu adoraria construir">Três que eu adoraria construir</h2>
+    <div class="cardgrid">
+      <div class="card card--accent reveal"><div class="card__icon">🏪</div><div class="card__t">Pequeno Comércio</div><div class="card__d" data-en="Clear money, real pain my family's credit business lived. Obvious customers, obvious revenue." data-pt="Dinheiro claro, dor real que o negócio de crédito da minha família viveu. Clientes óbvios, receita óbvia.">Dinheiro claro, dor real que o negócio de crédito da minha família viveu. Clientes óbvios, receita óbvia.</div></div>
+      <div class="card card--amber reveal"><div class="card__icon">📖</div><div class="card__t">Memória Viva</div><div class="card__d" data-en="The surprise that makes the room quiet. Showcases AI (voice→memoir) and it's deeply human." data-pt="A surpresa que silencia a sala. Mostra a IA (voz→memória) e é profundamente humana.">A surpresa que silencia a sala. Mostra a IA (voz→memória) e é profundamente humana.</div></div>
+      <div class="card card--blue reveal"><div class="card__icon">🧮</div><div class="card__t">Simulador de Financiamento</div><div class="card__d" data-en="Pure home turf — my Financial Math classes, made interactive. Easiest to build correctly." data-pt="Território puro — minhas aulas de Matemática Financeira, interativas. A mais fácil de construir certo.">Território puro — minhas aulas de Matemática Financeira, interativas. A mais fácil de construir certo.</div></div>
+    </div>
+    <div class="callout callout--green reveal"><div class="callout__icon">🗳️</div><div><div class="callout__t" data-en="But it's your call" data-pt="Mas a decisão é sua">Mas a decisão é sua</div><div class="callout__d" data-en="These are just my picks. We decide together — right now." data-pt="Estas são só minhas escolhas. Decidimos juntos — agora.">Estas são só minhas escolhas. Decidimos juntos — agora.</div></div></div>
+  </section>
+
+  <!-- 23 ═══ BMC ═══ -->
+  <section class="slide scrollable">
+    <p class="slide__label reveal" data-en="Turn excitement into a plan" data-pt="Transforme empolgação em plano">Transforme empolgação em plano</p>
+    <h2 class="slide__heading reveal" data-en="The Business Model Canvas" data-pt="O Business Model Canvas">O Business Model Canvas</h2>
+    <p class="slide__body reveal" style="margin-top:8px" data-en="Nine blocks. We fill it live for the idea we just chose — open the printable canvas and write." data-pt="Nove blocos. Preenchemos ao vivo para a ideia que acabamos de escolher — abra o canvas para imprimir e escreva.">Nove blocos. Preenchemos ao vivo para a ideia que acabamos de escolher — abra o canvas para imprimir e escreva.</p>
+    <div class="bmcmini reveal">
+      <div class="kp"><b data-en="Key Partners" data-pt="Parcerias">Parcerias</b><span data-en="Who helps you?" data-pt="Quem te ajuda?">Quem te ajuda?</span></div>
+      <div class="ka"><b data-en="Key Activities" data-pt="Atividades">Atividades</b><span data-en="What you do" data-pt="O que você faz">O que você faz</span></div>
+      <div class="vp"><b data-en="Value Proposition" data-pt="Proposta de Valor">Proposta de Valor</b><span data-en="The promise" data-pt="A promessa">A promessa</span></div>
+      <div class="cr"><b data-en="Relationships" data-pt="Relacionamento">Relacionamento</b><span data-en="How you keep them" data-pt="Como você os mantém">Como você os mantém</span></div>
+      <div class="cs"><b data-en="Customer Segments" data-pt="Segmentos">Segmentos</b><span data-en="Who pays" data-pt="Quem paga">Quem paga</span></div>
+      <div class="kr"><b data-en="Key Resources" data-pt="Recursos">Recursos</b><span data-en="What you need" data-pt="Do que precisa">Do que precisa</span></div>
+      <div class="ch"><b data-en="Channels" data-pt="Canais">Canais</b><span data-en="How you reach" data-pt="Como alcança">Como alcança</span></div>
+      <div class="co"><b data-en="Cost Structure" data-pt="Estrutura de Custos">Estrutura de Custos</b><span data-en="What it costs (free tiers!)" data-pt="O que custa (camadas grátis!)">O que custa (camadas grátis!)</span></div>
+      <div class="rs"><b data-en="Revenue Streams" data-pt="Fontes de Receita">Fontes de Receita</b><span data-en="How it makes money" data-pt="Como gera dinheiro">Como gera dinheiro</span></div>
+    </div>
+    <div class="callout reveal"><div class="callout__icon">🖨️</div><div><div class="callout__t" data-en="Printable canvas" data-pt="Canvas para imprimir">Canvas para imprimir</div><div class="callout__d"><a href="../materials/business-model-canvas.html" target="_blank" rel="noopener noreferrer" style="color:var(--accent-soft)" data-en="Open the Business Model Canvas → (worked example + blank)" data-pt="Abrir o Business Model Canvas → (exemplo + em branco)">Abrir o Business Model Canvas → (exemplo + em branco)</a></div></div></div>
+  </section>
+
+  <!-- 24 ═══ THE 4-WEEK MAP (GANTT) ═══ -->
+  <section class="slide scrollable">
+    <p class="slide__label reveal" data-en="The plan" data-pt="O plano">O plano</p>
+    <h2 class="slide__heading reveal" data-en="Four Saturdays to a live app" data-pt="Quatro sábados até um app no ar">Quatro sábados até um app no ar</h2>
+    <div class="gantt reveal">
+      <div class="gantt__head"><span></span><span>W1 · 06/06</span><span>W2 · 13/06</span><span>W3 · 20/06</span><span>W4 · 27/06</span></div>
+      <div class="gantt__row"><span class="gantt__task" data-en="Show & decide" data-pt="Mostrar & decidir">Mostrar & decidir</span><div class="gantt__track"><div class="gantt__cell fill"></div><div class="gantt__cell"></div><div class="gantt__cell"></div><div class="gantt__cell"></div></div></div>
+      <div class="gantt__row"><span class="gantt__task" data-en="Define & design" data-pt="Definir & desenhar">Definir & desenhar</span><div class="gantt__track"><div class="gantt__cell"></div><div class="gantt__cell fill b"></div><div class="gantt__cell"></div><div class="gantt__cell"></div></div></div>
+      <div class="gantt__row"><span class="gantt__task" data-en="Build the core" data-pt="Construir o núcleo">Construir o núcleo</span><div class="gantt__track"><div class="gantt__cell"></div><div class="gantt__cell"></div><div class="gantt__cell fill g"></div><div class="gantt__cell fill g"></div></div></div>
+      <div class="gantt__row"><span class="gantt__task" data-en="Ship & pitch" data-pt="Lançar & apresentar">Lançar & apresentar</span><div class="gantt__track"><div class="gantt__cell"></div><div class="gantt__cell"></div><div class="gantt__cell"></div><div class="gantt__cell fill a"></div></div></div>
+      <div class="gantt__milestones"><div class="gantt__ms"><span>◆ <span data-en="Idea + BMC" data-pt="Ideia + BMC">Ideia + BMC</span></span><span>◆ <span data-en="Skeleton live" data-pt="Esqueleto no ar">Esqueleto no ar</span></span><span>◆ <span data-en="Core works" data-pt="Núcleo funciona">Núcleo funciona</span></span><span>◆ <span data-en="Shipped" data-pt="Lançado">Lançado</span></span></div></div>
+    </div>
+  </section>
+
+  <!-- 25 ═══ WHAT WE SHIP EACH WEEK ═══ -->
+  <section class="slide scrollable">
+    <p class="slide__label reveal" data-en="Week by week" data-pt="Semana a semana">Semana a semana</p>
+    <h2 class="slide__heading reveal" data-en="What you leave with, each week" data-pt="O que você leva, a cada semana">O que você leva, a cada semana</h2>
+    <div class="steps">
+      <div class="step reveal"><div class="step__n">1</div><div><div class="step__t" data-en="W1 · Show & decide (today)" data-pt="S1 · Mostrar & decidir (hoje)">S1 · Mostrar & decidir (hoje)</div><div class="step__d" data-en="One chosen idea + a drafted Business Model Canvas." data-pt="Uma ideia escolhida + um Business Model Canvas rascunhado.">Uma ideia escolhida + um Business Model Canvas rascunhado.</div></div></div>
+      <div class="step reveal"><div class="step__n">2</div><div><div class="step__t" data-en="W2 · Define & design" data-pt="S2 · Definir & desenhar">S2 · Definir & desenhar</div><div class="step__d" data-en="Requirements, screens sketched, repo + Supabase + Vercel skeleton live." data-pt="Requisitos, telas esboçadas, esqueleto repo + Supabase + Vercel no ar.">Requisitos, telas esboçadas, esqueleto repo + Supabase + Vercel no ar.</div></div></div>
+      <div class="step reveal"><div class="step__n">3</div><div><div class="step__t" data-en="W3 · Build the core" data-pt="S3 · Construir o núcleo">S3 · Construir o núcleo</div><div class="step__d" data-en="The core user flow works end to end; data persists; preview deployed." data-pt="O fluxo central funciona de ponta a ponta; os dados persistem; preview no ar.">O fluxo central funciona de ponta a ponta; os dados persistem; preview no ar.</div></div></div>
+      <div class="step reveal"><div class="step__n">4</div><div><div class="step__t" data-en="W4 · Ship & pitch" data-pt="S4 · Lançar & apresentar">S4 · Lançar & apresentar</div><div class="step__d" data-en="App on a public URL, you pitch it, the Council gives its final verdict." data-pt="App numa URL pública, você apresenta, o Conselho dá o veredito final.">App numa URL pública, você apresenta, o Conselho dá o veredito final.</div></div></div>
+    </div>
+  </section>
+
+  <!-- 26 ═══ HOMEWORK ═══ -->
+  <section class="slide scrollable">
+    <p class="slide__label reveal" data-en="Before next Saturday" data-pt="Antes do próximo sábado">Antes do próximo sábado</p>
+    <h2 class="slide__heading reveal" data-en="Your homework for Week 2" data-pt="Sua lição para a Semana 2">Sua lição para a Semana 2</h2>
+    <div class="cardgrid cardgrid--quad">
+      <div class="card card--accent reveal"><div class="card__icon">🐙</div><div class="card__t" data-en="GitHub account" data-pt="Conta no GitHub">Conta no GitHub</div><div class="card__d" data-en="Create one (free). It's where our code will live." data-pt="Crie uma (grátis). É onde nosso código vai morar.">Crie uma (grátis). É onde nosso código vai morar.</div></div>
+      <div class="card card--blue reveal"><div class="card__icon">⚙️</div><div class="card__t" data-en="Install the basics" data-pt="Instale o básico">Instale o básico</div><div class="card__d" data-en="Node.js + VS Code + Claude Code. Setup steps in the handout." data-pt="Node.js + VS Code + Claude Code. Passos no material do aluno.">Node.js + VS Code + Claude Code. Passos no material do aluno.</div></div>
+      <div class="card card--green reveal"><div class="card__icon">🧠</div><div class="card__t" data-en="Sit with the idea" data-pt="Conviva com a ideia">Conviva com a ideia</div><div class="card__d" data-en="Use the app we chose in your head. Note 3 must-have features." data-pt="Use mentalmente o app que escolhemos. Anote 3 funções essenciais.">Use mentalmente o app que escolhemos. Anote 3 funções essenciais.</div></div>
+      <div class="card card--amber reveal"><div class="card__icon">📄</div><div class="card__t" data-en="Read the handout" data-pt="Leia o material">Leia o material</div><div class="card__d"><a href="../materials/student-handout.html" target="_blank" rel="noopener noreferrer" data-en="Open the student handout →" data-pt="Abrir o material do aluno →">Abrir o material do aluno →</a></div></div>
+    </div>
+  </section>
+
+  <!-- 27 ═══ CLOSE ═══ -->
+  <section class="slide slide--bleed">
+    <div class="slide__content">
+      <p class="classtag reveal" data-en="Layer Zero → Shipped" data-pt="Layer Zero → No ar">Layer Zero → No ar</p>
+      <h2 class="slide__display reveal" style="font-size:clamp(34px,7vw,84px);margin-top:10px" data-en="Now it's your turn." data-pt="Agora é a sua vez.">Agora é a sua vez.</h2>
+      <p class="slide__body reveal" style="margin-top:16px;max-width:60ch;margin-left:auto;margin-right:auto" data-en="You just saw what one person can ship with AI. In four Saturdays, that person is you." data-pt="Você acabou de ver o que uma pessoa lança com IA. Em quatro sábados, essa pessoa é você.">Você acabou de ver o que uma pessoa lança com IA. Em quatro sábados, essa pessoa é você.</p>
+      <div class="reveal"><a class="cta-url" href="../../index.html" data-en="◂ Back to the series" data-pt="◂ Voltar para a série">◂ Voltar para a série</a></div>
+      <div class="byline reveal" style="margin-top:26px"><div class="byline__gen" data-en="Workshop series by Leonardo Chalhoub · built with Claude · Jun 2026" data-pt="Série de workshops por Leonardo Chalhoub · feito com Claude · Jun 2026">Série de workshops por Leonardo Chalhoub · feito com Claude · Jun 2026</div></div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  /* ===== SlideEngine ===== */
+  function SlideEngine(){this.deck=document.querySelector('.deck');this.slides=[].slice.call(document.querySelectorAll('.slide'));this.current=0;this.total=this.slides.length;this.buildChrome();this.bindEvents();this.observe();this.update();}
+  SlideEngine.prototype.buildChrome=function(){var bar=document.createElement('div');bar.className='deck-progress';document.body.appendChild(bar);this.bar=bar;
+    var dots=document.createElement('div');dots.className='deck-dots';var self=this;this.slides.forEach(function(_,i){var d=document.createElement('button');d.className='deck-dot';d.title='Slide '+(i+1);d.onclick=function(){self.goTo(i);};dots.appendChild(d);});document.body.appendChild(dots);this.dots=[].slice.call(dots.children);
+    var counter=document.createElement('div');counter.className='deck-counter';document.body.appendChild(counter);this.counter=counter;
+    var foot=document.createElement('div');foot.className='deck-foot';foot.innerHTML='<b>AI Workshops</b> · 01';document.body.appendChild(foot);
+    var hints=document.createElement('div');hints.className='deck-hints';hints.setAttribute('data-en','← → or scroll to navigate');hints.setAttribute('data-pt','← → ou role para navegar');hints.textContent='← → ou role para navegar';document.body.appendChild(hints);this.hints=hints;this.hintTimer=setTimeout(function(){hints.classList.add('faded');},4500);};
+  SlideEngine.prototype.bindEvents=function(){var self=this;document.addEventListener('keydown',function(e){if(e.target.closest('input,textarea,[contenteditable]'))return;if(['ArrowDown','ArrowRight',' ','PageDown'].indexOf(e.key)>-1){e.preventDefault();self.next();}else if(['ArrowUp','ArrowLeft','PageUp'].indexOf(e.key)>-1){e.preventDefault();self.prev();}else if(e.key==='Home'){e.preventDefault();self.goTo(0);}else if(e.key==='End'){e.preventDefault();self.goTo(self.total-1);}self.fadeHints();});
+    var tY=null;this.deck.addEventListener('touchstart',function(e){tY=e.touches[0].clientY;},{passive:true});this.deck.addEventListener('touchend',function(e){if(tY===null)return;var dy=tY-e.changedTouches[0].clientY;if(Math.abs(dy)>50){dy>0?self.next():self.prev();}tY=null;});};
+  SlideEngine.prototype.observe=function(){var self=this;var obs=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('visible');self.current=self.slides.indexOf(entry.target);self.update();}});},{threshold:0.5});this.slides.forEach(function(s){obs.observe(s);});};
+  SlideEngine.prototype.goTo=function(i){this.slides[Math.max(0,Math.min(i,this.total-1))].scrollIntoView({behavior:'smooth'});};
+  SlideEngine.prototype.next=function(){if(this.current<this.total-1)this.goTo(this.current+1);};
+  SlideEngine.prototype.prev=function(){if(this.current>0)this.goTo(this.current-1);};
+  SlideEngine.prototype.update=function(){this.bar.style.width=((this.current+1)/this.total*100)+'%';var c=this.current;this.dots.forEach(function(d,i){d.classList.toggle('active',i===c);d.setAttribute('aria-current',i===c?'true':'false');});if(this.counter)this.counter.textContent=(this.current+1)+' / '+this.total;};
+  SlideEngine.prototype.fadeHints=function(){clearTimeout(this.hintTimer);this.hints.classList.add('faded');};
+
+  /* ===== Language ===== */
+  function applyLang(lang){document.querySelectorAll('[data-en]').forEach(function(el){var v=el.getAttribute('data-'+lang);if(v!==null)el.innerHTML=v;});
+    document.documentElement.setAttribute('data-lang',lang);document.documentElement.setAttribute('lang',lang==='pt'?'pt-BR':'en');
+    document.querySelectorAll('#langSeg button').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-set-lang')===lang);});
+    try{localStorage.setItem('ws-lang',lang);}catch(e){}}
+  /* ===== Theme ===== */
+  function applyTheme(theme){document.documentElement.setAttribute('data-theme',theme);
+    document.querySelectorAll('#themeSeg button').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-set-theme')===theme);});
+    try{localStorage.setItem('ws-theme',theme);}catch(e){}}
+
+  document.addEventListener('DOMContentLoaded',function(){
+    new SlideEngine();
+    document.querySelectorAll('#langSeg button').forEach(function(b){b.addEventListener('click',function(){applyLang(b.getAttribute('data-set-lang'));});});
+    document.querySelectorAll('#themeSeg button').forEach(function(b){b.addEventListener('click',function(){applyTheme(b.getAttribute('data-set-theme'));});});
+    var savedLang=null,savedTheme=null;try{savedLang=localStorage.getItem('ws-lang');savedTheme=localStorage.getItem('ws-theme');}catch(e){}
+    applyLang(savedLang||'pt');
+    applyTheme(savedTheme||document.documentElement.getAttribute('data-theme')||'dark');
+  });
+</script>
+</body>
+</html>
