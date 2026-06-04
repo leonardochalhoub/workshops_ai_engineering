@@ -4,7 +4,7 @@
 
 ### Building with AI — from Layer Zero to a shipped app
 
-A **4-Saturday workshop series** (Jun 2026): a finance professor, two students, and AI as the stage crew — going from *"I have an idea"* to *"it's live on the internet,"* at near-zero cost.
+A **4-Thursday workshop series** (Jun 2026): a finance professor, two students, and AI as the stage crew — going from *"I have an idea"* to *"it's live on the internet,"* at near-zero cost.
 
 [**▸ Open the live site**](https://leonardochalhoub.github.io/workshops_ai_engineering/) · bilingual **PT-BR / EN** · dark · light
 
@@ -16,10 +16,10 @@ A **4-Saturday workshop series** (Jun 2026): a finance professor, two students, 
 
 | Workshop | Date | Theme | Status |
 |---|---|---|---|
-| **01** | Sat 06 Jun 2026 | **Show & decide** — portfolio, the Council, 20 ideas → choose one + draft the BMC | ✅ Built |
-| 02 | Sat 13 Jun 2026 | Define & design — spec, screens, repo + Supabase + Vercel skeleton | ⏳ Planned |
-| 03 | Sat 20 Jun 2026 | Build the core — the flow works end to end, deployed preview | ⏳ Planned |
-| 04 | Sat 27 Jun 2026 | Ship & pitch — public URL, students pitch, Council's final verdict | ⏳ Planned |
+| **01** | Thu 04 Jun 2026 | **Show & decide** — portfolio, the Council, 20 ideas → choose one + draft the BMC | ✅ Built |
+| 02 | Thu 11 Jun 2026 | Define & design — spec, screens, repo + Supabase + Vercel skeleton | ⏳ Planned |
+| 03 | Thu 18 Jun 2026 | Build the core — the flow works end to end, deployed preview | ⏳ Planned |
+| 04 | Thu 25 Jun 2026 | Ship & pitch — public URL, students pitch, Council's final verdict | ⏳ Planned |
 
 ## Workshop 1 materials
 
